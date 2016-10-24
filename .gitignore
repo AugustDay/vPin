@@ -38,3 +38,12 @@ captures/
 
 # Keystore files
 *.jks
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Windows thumbnail db
+Thumbs.db
+
+# OSX files
+.DS_Store
