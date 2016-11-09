@@ -1,4 +1,4 @@
-package uw.virtualpin;
+package shawnhm1.tacoma.uw.edu.shawnscode;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -209,8 +209,19 @@ public class RegisterActivity extends AppCompatActivity {
                             .show();
                 }
             } catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "Something wrong with the data " +
-                        e.getMessage(), Toast.LENGTH_LONG).show();
+                if(result.contains("username"))
+                {
+                    Toast.makeText(getApplicationContext(), "Username already in Use ", Toast.LENGTH_LONG)
+                            .show();
+                }
+                if(result.contains("email"))
+                {
+                    Toast.makeText(getApplicationContext(), "Email already in Use ", Toast.LENGTH_LONG)
+                            .show();
+                }
+
+//                Toast.makeText(getApplicationContext(), result +
+//                        e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }
