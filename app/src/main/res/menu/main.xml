@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_logout"
+        android:orderInCategory="100"
+        android:title="@string/action_logout"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/drop_pin"
+        android:orderInCategory="100"
+        android:title="@string/drop_pin"
+        android:icon="@android:drawable/ic_input_add"
+        app:showAsAction="always"/>
+
+<!--    <item android:title="@string/drop_pin"
+        app:showAsAction="always">
+    <ImageView
+        android:id="@+id/drop_pin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orderInCategory="100"
+        app:srcCompat="@android:drawable/btn_plus" /></item>-->
+</menu>
