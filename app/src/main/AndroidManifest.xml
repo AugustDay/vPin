@@ -17,17 +17,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-
-
-
-
-
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality. 
-    -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -38,21 +27,34 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-<<<<<<< HEAD
-            android:label="@string/title_activity_drop_pin"
+            android:label="Login"
             android:theme="@style/AppTheme.NoActionBar">
-
-=======
-            android:label="vPin">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
->>>>>>> refs/remotes/origin/Login_Registration
         </activity>
-        <activity android:name=".RegisterActivity"
-            android:label="vPin"/>
-        <activity android:name=".MainActivity"></activity>
+
+    <activity
+        android:name=".MainActivity"
+        android:label="Inbox"
+        android:theme="@style/AppTheme.NoActionBar">
+        <intent-filter>
+            <action android:name="android.intent.action.DEFAULT" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
+        <activity
+            android:name=".RegisterActivity"
+            android:label="Register"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -67,21 +69,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD8Bp-cZUFwn4-MhgQ6cvkKs6hAMaCdtds" />
-
-<!--        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyD8Bp-cZUFwn4-MhgQ6cvkKs6hAMaCdtds" />-->
-
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>
