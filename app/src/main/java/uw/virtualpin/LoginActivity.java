@@ -1,4 +1,5 @@
-package shawnhm1.tacoma.uw.edu.shawnscode;
+package uw.virtualpin;
+
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
