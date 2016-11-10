@@ -1,9 +1,7 @@
 package uw.virtualpin;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -70,12 +68,13 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
-            return true;
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
         }
 
         if (id == R.id.drop_pin) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, new DropPinFragment()).addToBackStack(null).commit();
+                    .replace(R.id.fragment_container, new DropPinFragment()).addToBackStack(null).commit();
 
             // change mainbar title
             this.setTitle("Drop pin");
