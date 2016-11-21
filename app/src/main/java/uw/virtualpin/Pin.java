@@ -4,6 +4,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * Created by Tyler on 11/19/2016.
@@ -19,6 +22,9 @@ public class Pin {
     private double latitude;
     private double longitude;
     private String encodedImage;
+    private String dateTime;
+    private Calendar calendar;
+    private DateFormat dateFormat;
 
     public Pin(String userName, double latitude, double longitude, String message, String encodedImage) {
         this.message = message;
@@ -26,6 +32,9 @@ public class Pin {
         this.latitude = latitude;
         this.longitude = longitude;
         this.encodedImage = encodedImage;
+        dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        calendar.getInstance();
+        dateTime = dateFormat.format(calendar);
     }
 
     public double getLongitude() {
