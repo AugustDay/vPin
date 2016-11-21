@@ -1,19 +1,27 @@
 package uw.virtualpin;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -23,6 +31,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_OK;
 
 /*
 
@@ -38,8 +57,14 @@ permissions.
 public class DropPinFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private Pin pin;
+    private EditText messageText;
     private GoogleMap mMap;
-    private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClientGeo;
+    private static final int PICK_IMAGE = 100;
+    private Uri imageUri;
+    private ImageView imageView;
+    private ImageManager imageManager;
 
     /**
      * Default constructor.
@@ -60,7 +85,78 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_drop_pin, container, false);
+        final View view = inflater.inflate(R.layout.fragment_drop_pin, container, false);
+        final TextView show_text = (TextView) view.findViewById(R.id.show_button_text);
+        final Button uploadImageButton = (Button) view.findViewById(R.id.uploadImageButton);
+        final Users users = new Users();
+        imageManager = new ImageManager();
+        messageText = (EditText) view.findViewById(R.id.messageText);
+        imageView = (ImageView) view.findViewById(R.id.selectedImage);
+        show_text.setVisibility(View.GONE);
+
+        final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bitmap image = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                String imageString = imageManager.convertBitmapToByteArray(image);
+
+                pin = new Pin("tylerkb2", getLocation().getLatitude()
+                        , getLocation().getLongitude()
+                        , messageText.getText().toString()
+                        , imageString);
+
+                DropPinAsyncTask task = new DropPinAsyncTask(pin);
+                task.execute();
+            }
+        });
+
+        final SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        final TextView gpsText = (TextView) view.findViewById(R.id.gps_location_text);
+
+        messageText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) {
+                    FragmentManager fm = getFragmentManager();
+                        fm.beginTransaction().hide(mapFragment).commit();
+                    gpsText.setVisibility(View.GONE);
+                    show_text.setVisibility(View.VISIBLE);
+                } else {
+                }
+            }
+        });
+
+        messageText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                fm.beginTransaction().hide(mapFragment).commit();
+                gpsText.setVisibility(View.GONE);
+                show_text.setVisibility(View.VISIBLE);
+            }
+        });
+
+        show_text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                fm.beginTransaction().show(mapFragment).commit();
+                gpsText.setVisibility(View.VISIBLE);
+                messageText.setVisibility(View.VISIBLE);
+                show_text.setVisibility(View.GONE);
+            }
+        });
+
+        uploadImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+        });
+
+        return view;
     }
 
     /**
@@ -73,7 +169,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+
+        mGoogleApiClientGeo = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -82,15 +179,6 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Not working yet", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     /**
@@ -100,7 +188,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
     public void onResume() {
         super.onResume();
         //setUpMapIfNeeded();
-        mGoogleApiClient.connect();
+        mGoogleApiClientGeo.connect();
     }
 
     /**
@@ -109,8 +197,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
     @Override
     public void onPause() {
         super.onPause();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
+        if (mGoogleApiClientGeo.isConnected()) {
+            mGoogleApiClientGeo.disconnect();
         }
     }
 
@@ -152,7 +240,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
             //nothing
         }
 
-        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClientGeo);
 
         if (location == null) {
             throw new NullPointerException("Error loading location.");
@@ -210,7 +298,94 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
      * @param connectionResult
      */
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+    public void onConnectionFailed(ConnectionResult connectionResult) {
     }
+
+    public void openGallery() {
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+            imageUri = data.getData();
+            imageView.setImageURI(imageUri);
+        }
+    }
+
+    private class DropPinAsyncTask extends AsyncTask<Void, Void, Void> {
+        private Pin pin;
+
+        public DropPinAsyncTask(Pin pin) {
+            this.pin = pin;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            String urlString = pin.buildCourseURL(getView());
+            try {
+                URL url = new URL(urlString);
+                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                InputStream content = urlConnection.getInputStream();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            super.onPostExecute(v);
+        }
+    }
+
+
+//    private class DropPinAsyncTask extends AsyncTask<String, Void, String> {
+//        @Override
+//        protected String doInBackground(String... urls) {
+//            String response = "";
+//            HttpURLConnection urlConnection = null;
+//            for (String url : urls) {
+//                try {
+//                    URL urlObject = new URL(url);
+//                    urlConnection = (HttpURLConnection) urlObject.openConnection();
+//
+//                    InputStream content = urlConnection.getInputStream();
+//
+//                    BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+//                    String s = "";
+//                    while ((s = buffer.readLine()) != null) {
+//                        response += s;
+//                    }
+//
+//                } catch (Exception e) {
+//                    response = "Unable to complete your request, Reason: "
+//                            + e.getMessage();
+//                }
+//                finally {
+//                    if (urlConnection != null)
+//                        urlConnection.disconnect();
+//                }
+//            }
+//            return response;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            if (result.contains("true")) {
+//                Toast.makeText(getActivity().getApplicationContext()
+//                        , "Pin created!"
+//                        , Toast.LENGTH_LONG)
+//                        .show();
+//            } else {
+//                Toast.makeText(getActivity().getApplicationContext(), "Oops! Something went wrong."
+//                        , Toast.LENGTH_LONG)
+//                        .show();
+//            }
+//        }
+//    }
 }
