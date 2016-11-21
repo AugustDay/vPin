@@ -25,12 +25,14 @@ import java.net.URLEncoder;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private final static String COURSE_ADD_URL
+    public final static String COURSE_ADD_URL
             = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=register_user";
-    private EditText editText_username;
-    private EditText editText_password;
+    public EditText editText_username;
+    public EditText editText_password;
+    public EditText editText_email;
 
-    private EditText editText_email;
+    public EditText editText_firstName;
+    public EditText editText_lastName;
 
     private Button button_register;
 
@@ -46,6 +48,10 @@ public class RegisterActivity extends AppCompatActivity {
         editText_username = (EditText) findViewById(R.id.editText_username);
         editText_password = (EditText) findViewById(R.id.editText_password);
         editText_email = (EditText) findViewById(R.id.editText_email);
+
+        editText_firstName = (EditText) findViewById(R.id.editText_firstName);
+        editText_lastName = (EditText) findViewById(R.id.editText_lastname);
+
 
         button_register = (Button) findViewById(R.id.button_register);
         final Button button_backToLogin = (Button) findViewById(R.id.button_backToLogin);
@@ -63,6 +69,10 @@ public class RegisterActivity extends AppCompatActivity {
                 final String username = editText_username.getText().toString();
                 final String password = editText_password.getText().toString();
                 final String email = editText_email.getText().toString();
+
+                final String firstName = editText_firstName.getText().toString();
+                final String lastName = editText_lastName.getText().toString();
+
 
 
                 //Checks for username
@@ -96,7 +106,18 @@ public class RegisterActivity extends AppCompatActivity {
                     editText_password.requestFocus();
                     return;
                 }
-
+                //Check for First Name
+                if (TextUtils.isEmpty(firstName)){
+                    Toast.makeText(v.getContext(), "Enter First Name", Toast.LENGTH_SHORT).show();
+                    editText_firstName.requestFocus();
+                    return;
+                }
+                //Check for Last Name
+                if (TextUtils.isEmpty(lastName)){
+                    Toast.makeText(v.getContext(), "Enter Last Name", Toast.LENGTH_SHORT).show();
+                    editText_lastName.requestFocus();
+                    return;
+                }
 
                 String url = buildRegisterURL(v);
                 register(url);
@@ -139,6 +160,12 @@ public class RegisterActivity extends AppCompatActivity {
             sb.append("&email=");
             sb.append(URLEncoder.encode(email,"UTF-8"));
 
+            //ONCE PHP IS SET UP PUT IN ORDER FOR REGISTRATION
+
+//            String firstName = editText_firstName.getText().toString();
+
+
+
             Log.i("111 Register", sb.toString());
         }
         catch(Exception e) {
@@ -148,7 +175,7 @@ public class RegisterActivity extends AppCompatActivity {
         return sb.toString();
     }
 
-    private class RegisterTask extends AsyncTask<String, Void, String> {
+    public class RegisterTask extends AsyncTask<String, Void, String> {
 
         /**
          * perform registration in the background
