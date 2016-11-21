@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +21,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -34,12 +35,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -65,6 +63,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
     private Uri imageUri;
     private ImageView imageView;
     private ImageManager imageManager;
+    private TextView textGps;
 
     /**
      * Default constructor.
@@ -98,22 +97,35 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bitmap image = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                String imageString = imageManager.convertBitmapToByteArray(image);
+                String imageString = "NO_IMAGE";
 
-                pin = new Pin("tylerkb2", getLocation().getLatitude()
-                        , getLocation().getLongitude()
-                        , messageText.getText().toString()
-                        , imageString);
+                if(imageView.getDrawable() != null) {
+                    Bitmap image = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                    imageString = imageManager.convertBitmapToByteArray(image);
+                }
 
-                DropPinAsyncTask task = new DropPinAsyncTask(pin);
-                task.execute();
+                try {
+                    pin = new Pin("tylerkb2", getLocation().getLatitude()
+                            , getLocation().getLongitude()
+                            , messageText.getText().toString()
+                            , imageString);
+
+                    DropPinAsyncTask task = new DropPinAsyncTask();
+                    task.execute(pin.buildCourseURL(view));
+                    messageText.setText("");
+
+                } catch (Exception e){
+                    Toast.makeText(getActivity().getApplicationContext()
+                            , "Error loading location, Pin not created."
+                            , Toast.LENGTH_LONG)
+                            .show();
+                }
             }
         });
 
         final SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
-        final TextView gpsText = (TextView) view.findViewById(R.id.gps_location_text);
+        textGps = (TextView) view.findViewById(R.id.gps_location_text);
 
         messageText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -121,7 +133,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
                 if(hasFocus) {
                     FragmentManager fm = getFragmentManager();
                         fm.beginTransaction().hide(mapFragment).commit();
-                    gpsText.setVisibility(View.GONE);
+                    textGps.setVisibility(View.GONE);
                     show_text.setVisibility(View.VISIBLE);
                 } else {
                 }
@@ -133,7 +145,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
                 fm.beginTransaction().hide(mapFragment).commit();
-                gpsText.setVisibility(View.GONE);
+                textGps.setVisibility(View.GONE);
                 show_text.setVisibility(View.VISIBLE);
             }
         });
@@ -143,7 +155,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
                 fm.beginTransaction().show(mapFragment).commit();
-                gpsText.setVisibility(View.VISIBLE);
+                textGps.setVisibility(View.VISIBLE);
                 messageText.setVisibility(View.VISIBLE);
                 show_text.setVisibility(View.GONE);
             }
@@ -220,7 +232,6 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
      */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-
         setMapLocation(getLocation());
     }
 
@@ -243,9 +254,10 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClientGeo);
 
         if (location == null) {
-            throw new NullPointerException("Error loading location.");
+            textGps.setText("Error loading location...");
         }
         else {
+            mMap.setMyLocationEnabled(true);
             setMapLocation(location);
         }
 
@@ -259,6 +271,10 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
      * @param location current location of the user.
      */
     private void setMapLocation(Location location) {
+        if(location == null) {
+            return;
+        }
+
         double lat = location.getLatitude();
         double lng = location.getLongitude();
 
@@ -315,77 +331,48 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
         }
     }
 
-    private class DropPinAsyncTask extends AsyncTask<Void, Void, Void> {
-        private Pin pin;
-
-        public DropPinAsyncTask(Pin pin) {
-            this.pin = pin;
-        }
-
+    private class DropPinAsyncTask extends AsyncTask<String, Void, String> {
         @Override
-        protected Void doInBackground(Void... params) {
-            String urlString = pin.buildCourseURL(getView());
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("POST");
-                InputStream content = urlConnection.getInputStream();
-            } catch (Exception e) {
-                e.printStackTrace();
+        protected String doInBackground(String... urls) {
+            String response = "";
+            HttpURLConnection urlConnection = null;
+            for (String url : urls) {
+                try {
+                    URL urlObject = new URL(url);
+                    urlConnection = (HttpURLConnection) urlObject.openConnection();
+
+                    InputStream content = urlConnection.getInputStream();
+
+                    BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                    String s = "";
+                    while ((s = buffer.readLine()) != null) {
+                        response += s;
+                    }
+
+                } catch (Exception e) {
+                    response = "Unable to complete your request, Reason: "
+                            + e.getMessage();
+                }
+                finally {
+                    if (urlConnection != null)
+                        urlConnection.disconnect();
+                }
             }
-
-            return null;
+            return response;
         }
 
         @Override
-        protected void onPostExecute(Void v) {
-            super.onPostExecute(v);
+        protected void onPostExecute(String result) {
+            if (result.contains("true")) {
+                Toast.makeText(getActivity().getApplicationContext()
+                        , "Pin created!"
+                        , Toast.LENGTH_LONG)
+                        .show();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "Oops! Something went wrong."
+                        , Toast.LENGTH_LONG)
+                        .show();
+            }
         }
     }
-
-
-//    private class DropPinAsyncTask extends AsyncTask<String, Void, String> {
-//        @Override
-//        protected String doInBackground(String... urls) {
-//            String response = "";
-//            HttpURLConnection urlConnection = null;
-//            for (String url : urls) {
-//                try {
-//                    URL urlObject = new URL(url);
-//                    urlConnection = (HttpURLConnection) urlObject.openConnection();
-//
-//                    InputStream content = urlConnection.getInputStream();
-//
-//                    BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
-//                    String s = "";
-//                    while ((s = buffer.readLine()) != null) {
-//                        response += s;
-//                    }
-//
-//                } catch (Exception e) {
-//                    response = "Unable to complete your request, Reason: "
-//                            + e.getMessage();
-//                }
-//                finally {
-//                    if (urlConnection != null)
-//                        urlConnection.disconnect();
-//                }
-//            }
-//            return response;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            if (result.contains("true")) {
-//                Toast.makeText(getActivity().getApplicationContext()
-//                        , "Pin created!"
-//                        , Toast.LENGTH_LONG)
-//                        .show();
-//            } else {
-//                Toast.makeText(getActivity().getApplicationContext(), "Oops! Something went wrong."
-//                        , Toast.LENGTH_LONG)
-//                        .show();
-//            }
-//        }
-//    }
 }

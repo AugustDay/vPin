@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_logout) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
+            finish();
         }
 
         if (id == R.id.drop_pin) {

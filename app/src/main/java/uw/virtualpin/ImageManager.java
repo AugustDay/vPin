@@ -10,6 +10,9 @@ public class ImageManager {
     }
 
     public String convertBitmapToByteArray(Bitmap image) {
+        if(image == null) {
+            return "NULL_IMAGE";
+        }
         Bitmap bitmap = image;
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
