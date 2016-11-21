@@ -25,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String LOGIN_URL
             = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=select*users";
-    private Users mUsers;
+    public Users mUsers;
     private SharedPreferences mSharedPreferences;
     public static int logInCount = 0;//use to fix rotate losing game states bug
 
@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
 //    /**test
 //     * store the username and password to shared preference
 //     * @param username
-//     * @param password
+//     * @param shawnhpassword
 //     */
 //    private void storeInSharedPreference(String username, String password) {
 ////        ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
