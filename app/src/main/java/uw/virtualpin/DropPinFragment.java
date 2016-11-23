@@ -349,6 +349,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
                         response += s;
                     }
 
+
+
                 } catch (Exception e) {
                     response = "Unable to complete your request, Reason: "
                             + e.getMessage();
