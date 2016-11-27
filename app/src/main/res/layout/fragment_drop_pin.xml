@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="uw.virtualpin.DropPinFragment"
     android:id="@+id/content_drop_pin">
 
@@ -35,27 +34,26 @@
         android:hint="Input your message here:"
         android:inputType="textAutoCorrect|textCapSentences|textMultiLine"/>
 
-    <Button
-        android:text="Upload Image..."
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/uploadImageButton"/>
-
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:id="@+id/selectedImage"/>
-    </LinearLayout>
+        <Button
+            android:text="Upload Image..."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/uploadImageButton"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        <Button
+            android:text="Pin it!"
+            android:id="@+id/postButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/selectedImage"/>
 </LinearLayout>

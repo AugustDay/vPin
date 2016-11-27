@@ -23,8 +23,6 @@ public class Pin {
     private double longitude;
     private String encodedImage;
     private String dateTime;
-    private Calendar calendar;
-    private DateFormat dateFormat;
 
     public Pin(String userName, double latitude, double longitude, String message, String encodedImage) {
         this.message = message;
@@ -32,9 +30,6 @@ public class Pin {
         this.latitude = latitude;
         this.longitude = longitude;
         this.encodedImage = encodedImage;
-        dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        calendar.getInstance();
-        dateTime = dateFormat.format(calendar);
     }
 
     public double getLongitude() {

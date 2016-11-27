@@ -36,8 +36,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -55,7 +57,6 @@ permissions.
 public class DropPinFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private Pin pin;
     private EditText messageText;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClientGeo;
@@ -64,6 +65,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
     private ImageView imageView;
     private ImageManager imageManager;
     private TextView textGps;
+    private Pin pin;
+    private String username;
 
     /**
      * Default constructor.
@@ -93,8 +96,19 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
         imageView = (ImageView) view.findViewById(R.id.selectedImage);
         show_text.setVisibility(View.GONE);
 
-        final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        if (savedInstanceState == null) {
+            Bundle extras = getActivity().getIntent().getExtras();
+            if(extras == null) {
+                username= null;
+            } else {
+                username= extras.getString("USERNAME");
+            }
+        } else {
+            username= (String) savedInstanceState.getSerializable("USERNAME");
+        }
+
+        final Button pinButton = (Button) view.findViewById(R.id.postButton);
+        pinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String imageString = "NO_IMAGE";
@@ -104,21 +118,30 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
                     imageString = imageManager.convertBitmapToByteArray(image);
                 }
 
-                try {
-                    pin = new Pin("tylerkb2", getLocation().getLatitude()
-                            , getLocation().getLongitude()
-                            , messageText.getText().toString()
-                            , imageString);
-
-                    DropPinAsyncTask task = new DropPinAsyncTask();
-                    task.execute(pin.buildCourseURL(view));
-                    messageText.setText("");
-
-                } catch (Exception e){
+                if(imageString == "NO_IMAGE" && messageText.getText().toString().length() == 0) {
                     Toast.makeText(getActivity().getApplicationContext()
-                            , "Error loading location, Pin not created."
+                            , "Please enter a message or upload a photo"
                             , Toast.LENGTH_LONG)
                             .show();
+                } else {
+
+                    try {
+                        pin = new Pin(username, getLocation().getLatitude()
+                                , getLocation().getLongitude()
+                                , messageText.getText().toString()
+                                , imageString);
+
+                        DropPinAsyncTask task = new DropPinAsyncTask();
+                        task.execute(pin.buildCourseURL(view));
+                        messageText.setText("");
+                        imageView.setImageResource(0);
+
+                    } catch (Exception e) {
+                        Toast.makeText(getActivity().getApplicationContext()
+                                , "Error loading location, Pin not created."
+                                , Toast.LENGTH_LONG)
+                                .show();
+                    }
                 }
             }
         });
@@ -341,6 +364,17 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
                     URL urlObject = new URL(url);
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
 
+                    if(pin.getEncodedImage() != "NO_IMAGE") {
+
+                        urlConnection.setDoOutput(true);
+                        String data = URLEncoder.encode("image", "UTF-8")
+                                + "=" + URLEncoder.encode(pin.getEncodedImage(), "UTF-8");
+
+                        OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+                        wr.write(data);
+                        wr.flush();
+                    }
+
                     InputStream content = urlConnection.getInputStream();
 
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
@@ -348,8 +382,6 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
                     while ((s = buffer.readLine()) != null) {
                         response += s;
                     }
-
-
 
                 } catch (Exception e) {
                     response = "Unable to complete your request, Reason: "
@@ -371,7 +403,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
                         , Toast.LENGTH_LONG)
                         .show();
             } else {
-                Toast.makeText(getActivity().getApplicationContext(), "Oops! Something went wrong."
+                Toast.makeText(getActivity().getApplicationContext(), "Oops! Something went wrong." + result
                         , Toast.LENGTH_LONG)
                         .show();
             }

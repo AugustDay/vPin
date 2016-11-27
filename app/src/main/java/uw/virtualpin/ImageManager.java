@@ -15,7 +15,7 @@ public class ImageManager {
         }
         Bitmap bitmap = image;
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
         byte[] byteArray = stream.toByteArray();
         String encodedImage = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
