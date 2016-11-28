@@ -23,6 +23,11 @@ public class ImageManager {
     }
     
     public String convertEncodedImageToBitmap(String encodedImage) {
+        if(encodedImage == null) {
+            Log.e("ERROR: ", "Encoded image string was null");
+            return null;
+        }
+        
         byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         
