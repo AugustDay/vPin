@@ -17,6 +17,8 @@ public class Users {
     private String mPassword;
     public static final String USERNAME = "username", PASSWORD = "password";
 
+    public Users() {}
+
     /**
      * constructor of user
      * @param username
@@ -66,4 +68,10 @@ public class Users {
         return reason;
     }
 
+    /**
+     * Created by Tyler on 11/20/2016.
+     */
+
+    public static class ImageManager {
+    }
 }

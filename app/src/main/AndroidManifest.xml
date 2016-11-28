@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uw.virtualpin">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -27,7 +26,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="vPin"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,13 +40,26 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+<<<<<<< HEAD
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+=======
+    <activity
+        android:name=".MainActivity"
+        android:label="Inbox"
+        android:theme="@style/AppTheme.NoActionBar">
+        <intent-filter>
+            <action android:name="android.intent.action.DEFAULT" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
+>>>>>>> refs/remotes/origin/Drop_Pin_Feature
         <activity
             android:name=".RegisterActivity"
             android:label="vPin"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />
 
@@ -55,6 +67,7 @@
             </intent-filter>
         </activity>
 
+<<<<<<< HEAD
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -68,6 +81,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         -->
+=======
+>>>>>>> refs/remotes/origin/Drop_Pin_Feature
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD8Bp-cZUFwn4-MhgQ6cvkKs6hAMaCdtds" />
