@@ -1,7 +1,10 @@
 package uw.virtualpin;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
+
 import java.io.ByteArrayOutputStream;
 
 public class ImageManager {
@@ -22,7 +25,7 @@ public class ImageManager {
         return encodedImage;
     }
     
-    public String convertEncodedImageToBitmap(String encodedImage) {
+    public Bitmap convertEncodedImageToBitmap(String encodedImage) {
         if(encodedImage == null) {
             Log.e("ERROR: ", "Encoded image string was null");
             return null;
