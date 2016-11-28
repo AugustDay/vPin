@@ -98,13 +98,13 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
 
         if (savedInstanceState == null) {
             Bundle extras = getActivity().getIntent().getExtras();
-            if(extras == null) {
-                username= null;
+            if (extras == null) {
+                username = null;
             } else {
-                username= extras.getString("USERNAME");
+                username = extras.getString("USERNAME");
             }
         } else {
-            username= (String) savedInstanceState.getSerializable("USERNAME");
+            username = (String) savedInstanceState.getSerializable("USERNAME");
         }
 
         final Button pinButton = (Button) view.findViewById(R.id.postButton);
@@ -113,12 +113,12 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
             public void onClick(View view) {
                 String imageString = "NO_IMAGE";
 
-                if(imageView.getDrawable() != null) {
+                if (imageView.getDrawable() != null) {
                     Bitmap image = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
                     imageString = imageManager.convertBitmapToByteArray(image);
                 }
 
-                if(imageString == "NO_IMAGE" && messageText.getText().toString().length() == 0) {
+                if (imageString == "NO_IMAGE" && messageText.getText().toString().length() == 0) {
                     Toast.makeText(getActivity().getApplicationContext()
                             , "Please enter a message or upload a photo"
                             , Toast.LENGTH_LONG)
@@ -153,9 +153,9 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
         messageText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus) {
+                if (hasFocus) {
                     FragmentManager fm = getFragmentManager();
-                        fm.beginTransaction().hide(mapFragment).commit();
+                    fm.beginTransaction().hide(mapFragment).commit();
                     textGps.setVisibility(View.GONE);
                     show_text.setVisibility(View.VISIBLE);
                 } else {
@@ -271,19 +271,17 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            //nothing
+
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    0);
+
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    1);
         }
 
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClientGeo);
-
-        if (location == null) {
-            textGps.setText("Error loading location...");
-        }
-        else {
-            mMap.setMyLocationEnabled(true);
-            setMapLocation(location);
-        }
-
         return location;
     }
 
@@ -294,7 +292,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
      * @param location current location of the user.
      */
     private void setMapLocation(Location location) {
-        if(location == null) {
+        if (location == null) {
+            textGps.setText("Error loading location...");
             return;
         }
 
@@ -306,6 +305,14 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
         mMap.moveCamera(CameraUpdateFactory.newLatLng(coords));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        mMap.setMyLocationEnabled(true);
         updateTextView(lat, lng);
     }
 
