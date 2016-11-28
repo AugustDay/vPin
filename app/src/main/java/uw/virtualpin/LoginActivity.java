@@ -27,7 +27,9 @@ public class LoginActivity extends AppCompatActivity {
             = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=select*users";
     public Users mUsers;
     private SharedPreferences mSharedPreferences;
-    public static int logInCount = 0;//use to fix rotate losing game states bug
+
+    UserLocalStore userLocalStore;
+
 
     /**
      * create activity and perform log in function, saving the user information to shared preference
@@ -37,6 +39,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        userLocalStore = new UserLocalStore(this);
+
 
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         Boolean loggedinBoolean = mSharedPreferences.getBoolean("login" , false);
@@ -87,10 +92,13 @@ public class LoginActivity extends AppCompatActivity {
                             editText_password.requestFocus();
                             return;
                         }
-                        mUsers = new Users(username, password);
-                        //storeInSharedPreference(username, password);
-                        new LoginTask().execute(new String[]{LOGIN_URL.toString()});
 
+                        mUsers = new Users(password, username);
+
+                        userLocalStore.storeUserData(mUsers);
+                        userLocalStore.setUsersLoggedin(true);
+
+                        new LoginTask().execute(new String[]{LOGIN_URL.toString()});
                     }
                 });
                 if (button_goToRegister != null) {

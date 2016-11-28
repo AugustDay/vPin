@@ -69,11 +69,10 @@ public class RegisterActivity extends AppCompatActivity {
                 final String username = editText_username.getText().toString();
                 final String password = editText_password.getText().toString();
                 final String email = editText_email.getText().toString();
-
                 final String firstName = editText_firstName.getText().toString();
                 final String lastName = editText_lastName.getText().toString();
 
-
+                Users registeredData = new Users(username, password, firstName, lastName, email);
 
                 //Checks for username
                 if (TextUtils.isEmpty(username))  {
@@ -108,13 +107,13 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 //Check for First Name
                 if (TextUtils.isEmpty(firstName)){
-                    Toast.makeText(v.getContext(), "Enter First Name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), "Enter Your First Name", Toast.LENGTH_SHORT).show();
                     editText_firstName.requestFocus();
                     return;
                 }
                 //Check for Last Name
                 if (TextUtils.isEmpty(lastName)){
-                    Toast.makeText(v.getContext(), "Enter Last Name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), "Enter Your Last Name", Toast.LENGTH_SHORT).show();
                     editText_lastName.requestFocus();
                     return;
                 }
@@ -161,6 +160,15 @@ public class RegisterActivity extends AppCompatActivity {
             sb.append(URLEncoder.encode(email,"UTF-8"));
 
             //ONCE PHP IS SET UP PUT IN ORDER FOR REGISTRATION
+
+//            String firstName = editText_firstName.getText().toString();
+//            sb.append("&firstName=");
+//            sb.append(URLEncoder.encode(firstName, "UTF-8"));
+//
+//            String lastName = editText_lastName.getText().toString();
+//            sb.append("&lastName=");
+//            sb.append(URLEncoder.encode(lastName, "UTF-8"));
+//
 
 //            String firstName = editText_firstName.getText().toString();
 

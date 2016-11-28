@@ -7,14 +7,21 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 import uw.virtualpin.message.MessageContent;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MessageFragment.OnListFragmentInteractionListener {
+
+        //EditText etUserName, etPassword, etFirstName, etLastName, etEmail;
+        UserLocalStore userLocalStore;
+
 
     /**
      *
@@ -27,7 +34,15 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-/*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        //setContentView(R.layout.activity_profile_page);
+        // etFirstName = (EditText) findViewById(R.id.user_profile_name);
+        //etEmail =  (EditText)(findViewById(R.id.user_profile_email));
+        //etUserName =  (EditText)(findViewById(R.id.user_profile_username));
+
+        userLocalStore = new UserLocalStore(this);
+
+
+        /*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,7 +62,34 @@ public class MainActivity extends AppCompatActivity
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new MessageFragment()).commit();
+
+        userLocalStore = new UserLocalStore(this);
     }
+//
+//    @Override
+//    protected  void onStart(){
+//        super.onStart();
+//
+//        if (authenticate() == true){
+//            displayUserDetails();
+//        }
+//    }
+//
+//
+//    private boolean authenticate(){
+//        return userLocalStore.getUserLoggedIn();
+//    }
+//
+//    private void displayUserDetails(){
+//        Users loggedInUser = userLocalStore.getLoggedinUser();
+//
+//        //etUserName.setText((CharSequence) loggedInUser.mUsername);
+//        etEmail.setText(loggedInUser.mUsername);
+//       // etEmail.setText((CharSequence) loggedInUser.mEmail);
+//      //  etFirstName.setText(loggedInUser.mFirstName);
+//    }
+
+
 
     /**
      *
