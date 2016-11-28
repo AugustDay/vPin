@@ -21,4 +21,11 @@ public class ImageManager {
 
         return encodedImage;
     }
+    
+    public String convertEncodedImageToBitmap(String encodedImage) {
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        
+        return bitmap;
+    }
 }
