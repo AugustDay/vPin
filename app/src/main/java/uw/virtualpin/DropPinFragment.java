@@ -10,10 +10,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,7 +57,7 @@ permissions.
  */
 
 public class DropPinFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private EditText messageText;
     private GoogleMap mMap;
@@ -216,6 +218,14 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
         mapFragment.getMapAsync(this);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        setMapLocation(getLocation());
+    }
+
+
+
     /**
      * Connects the Google Api Client.
      */
@@ -255,7 +265,20 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
      */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        setMapLocation(getLocation());
+
+        LocationRequest mLocationRequest = new LocationRequest();
+        mLocationRequest.setFastestInterval(10000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClientGeo, mLocationRequest, this);
     }
 
     /**
@@ -304,6 +327,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
         mMap.addMarker(new MarkerOptions().position(coords));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(coords));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(coords));
 
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
@@ -312,7 +336,6 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
             return;
         }
 
-        mMap.setMyLocationEnabled(true);
         updateTextView(lat, lng);
     }
 
@@ -359,6 +382,12 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
             imageUri = data.getData();
             imageView.setImageURI(imageUri);
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.e("Location Changed: ", location.toString());
+        setMapLocation(location);
     }
 
     private class DropPinAsyncTask extends AsyncTask<String, Void, String> {
