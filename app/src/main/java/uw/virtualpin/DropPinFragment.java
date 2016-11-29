@@ -206,6 +206,11 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
         mGoogleApiClientGeo = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
@@ -215,12 +220,9 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-    }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+        mapFragment.getMapAsync(this);
+
         setMapLocation(getLocation());
     }
 
@@ -267,7 +269,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
     public void onConnected(@Nullable Bundle bundle) {
 
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setFastestInterval(10000);
+        mLocationRequest.setInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -335,7 +337,6 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
                 != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
         updateTextView(lat, lng);
     }
 
