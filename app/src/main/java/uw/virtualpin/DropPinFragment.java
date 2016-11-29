@@ -326,6 +326,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Goo
         double lng = location.getLongitude();
 
         LatLng coords = new LatLng(lat, lng);
+        mMap.clear();
         mMap.addMarker(new MarkerOptions().position(coords));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(coords));
         mMap.moveCamera(CameraUpdateFactory.zoomTo(15));
