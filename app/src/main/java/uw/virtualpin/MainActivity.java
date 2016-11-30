@@ -126,6 +126,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_filter) {
 
         } else if (id == R.id.nav_tools) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new PostHistoryFragment()).commit();
+            setTitle("Post History");
 
         } else if (id == R.id.nav_settings) {
 
