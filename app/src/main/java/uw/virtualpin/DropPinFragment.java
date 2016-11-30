@@ -118,6 +118,12 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        locationManager.stopLocationManager();
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
