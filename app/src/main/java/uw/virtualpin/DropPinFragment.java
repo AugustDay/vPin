@@ -1,5 +1,6 @@
 package uw.virtualpin;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -65,6 +68,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
     private Pin pin;
     private String username;
     private LocationManager locationManager;
+    private SupportMapFragment mapFragment;
+    private TextView show_text;
 
     public DropPinFragment() {
         // Required empty public constructor
@@ -79,9 +84,12 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         final Users users = new Users();
         imageManager = new ImageManager();
         textGps = (TextView) view.findViewById(R.id.gps_location_text);
-        locationManager = new LocationManager(getActivity(), this);
         messageText = (EditText) view.findViewById(R.id.messageText);
         imageView = (ImageView) view.findViewById(R.id.selectedImage);
+        show_text = (TextView) view.findViewById(R.id.show_button_text);
+        show_text = (TextView) view.findViewById(R.id.show_button_text);
+        mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
         setupDropPinButton(view);
         setupEditTextShowHide(view);
 
@@ -109,7 +117,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
     @Override
     public void onStart() {
         super.onStart();
-
+        locationManager = new LocationManager(getActivity(), this);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -208,6 +216,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                         task.execute(pin.buildCourseURL(view));
                         messageText.setText("");
                         imageView.setImageResource(0);
+                        closeSoftKeyboard();
 
                     } catch (Exception e) {
                         Toast.makeText(getActivity().getApplicationContext()
@@ -221,19 +230,13 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
     }
 
     private void setupEditTextShowHide(View view) {
-        final TextView show_text = (TextView) view.findViewById(R.id.show_button_text);
-        final SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map);
         show_text.setVisibility(View.GONE);
 
         messageText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    FragmentManager fm = getFragmentManager();
-                    fm.beginTransaction().hide(mapFragment).commit();
-                    textGps.setVisibility(View.GONE);
-                    show_text.setVisibility(View.VISIBLE);
+                    setViews(false);
                 } else {
                 }
             }
@@ -242,31 +245,53 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         messageText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getFragmentManager();
-                fm.beginTransaction().hide(mapFragment).commit();
-                textGps.setVisibility(View.GONE);
-                show_text.setVisibility(View.VISIBLE);
+                setViews(false);
             }
         });
 
         show_text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fm = getFragmentManager();
-                fm.beginTransaction().show(mapFragment).commit();
-                textGps.setVisibility(View.VISIBLE);
-                messageText.setVisibility(View.VISIBLE);
-                show_text.setVisibility(View.GONE);
+                setViews(true);
             }
         });
     }
 
-    private class DropPinAsyncTask extends AsyncTask<String, Void, String> {
+    private void setViews(Boolean on) {
+        if(on) {
+            FragmentManager fm = getFragmentManager();
+            fm.beginTransaction().show(mapFragment).commit();
+            textGps.setVisibility(View.VISIBLE);
+            messageText.setVisibility(View.VISIBLE);
+            show_text.setVisibility(View.GONE);
+
+        } else {
+            FragmentManager fm = getFragmentManager();
+            fm.beginTransaction().hide(mapFragment).commit();
+            textGps.setVisibility(View.GONE);
+            show_text.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void closeSoftKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            setViews(true);
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private class DropPinAsyncTask extends AsyncTask<String, Integer, String> {
+        Snackbar snackbar;
+
         @Override
         protected String doInBackground(String... urls) {
             String response = "";
             HttpURLConnection urlConnection = null;
             for (String url : urls) {
+                snackbar = Snackbar.make(getView(), "Uploading Pin, please wait...", Snackbar.LENGTH_INDEFINITE);
+                snackbar.show();
                 try {
                     URL urlObject = new URL(url);
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
@@ -305,10 +330,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         @Override
         protected void onPostExecute(String result) {
             if (result.contains("true")) {
-                Toast.makeText(getActivity().getApplicationContext()
-                        , "Pin created!"
-                        , Toast.LENGTH_LONG)
-                        .show();
+                snackbar = Snackbar.make(getView(), "Pin created.", Snackbar.LENGTH_SHORT);
+                snackbar.show();
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "Oops! Something went wrong." + result
                         , Toast.LENGTH_LONG)
