@@ -20,6 +20,8 @@ import static android.support.v4.app.ActivityCompat.requestPermissions;
  * Created by tyler on 11/29/2016.
  */
 
+
+//Note: make sure to call stopLocationManager() in onPause() for any activity or fragment that uses it.
 public class LocationManager implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -64,8 +66,14 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks,
                 (mGoogleApiClientGeo, mLocationRequest, locationListener);
     }
 
+    public void stopLocationManager() {
+        mGoogleApiClientGeo.disconnect();
+    }
+
     @Override
     public void onConnectionSuspended(int i) {
+        LocationServices.FusedLocationApi.flushLocations(mGoogleApiClientGeo);
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClientGeo, locationListener);
     }
 
     @Override
