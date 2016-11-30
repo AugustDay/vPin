@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_tools) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new PostHistoryFragment()).commit();
+                    .replace(R.id.fragment_container, new PostHistoryFragment()).addToBackStack(null).commit();
             setTitle("Post History");
 
         } else if (id == R.id.nav_settings) {

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -93,10 +94,28 @@ public class PostHistoryFragment extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 R.layout.listview_item, stringList);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
+                ArrayList<String> pinData = new ArrayList<String>();
+                Pin pin = pins.get(position);
+
+                pinData.add(pin.getUserName());
+                pinData.add("(" + pin.getLatitude() + ", " + pin.getLongitude() + ")");
+                pinData.add(pin.getMessage());
+                pinData.add(pin.getEncodedImage());
+
+                PinFragment pinFragment = new PinFragment();
+                Bundle args = new Bundle();
+                args.putStringArrayList("PINS", pinData);
+                pinFragment.setArguments(args);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, pinFragment).commit();
+            }
+        });
     }
 
-    private void parseJSON(String jsonString) {
-        int attempt = 0;
+    private void parseJSON(String jsonString, int attempt) {
 
         try {
             JSONArray jsonArray = new JSONArray(jsonString);
@@ -114,13 +133,11 @@ public class PostHistoryFragment extends Fragment {
         } catch (JSONException e) {
             if(attempt >= 2) {
 
-                Toast.makeText(getActivity().getApplicationContext()
-                        , "Error: please reload this page."
-                        , Toast.LENGTH_LONG)
-                        .show();
+                Snackbar.make(getView(), "Error, please reload this page.", Snackbar.LENGTH_LONG);
                 return;
             } else {
                 attempt++;
+                parseJSON(jsonString, attempt);
             }
         }
 
@@ -169,19 +186,12 @@ private class PostHistoryAsyncTask extends AsyncTask<String, Integer, String> {
             snackbar = Snackbar.make(getView(), "Pin history retrieved", Snackbar.LENGTH_SHORT);
             snackbar.show();
 
-            parseJSON(result);
+            parseJSON(result, 0);
 
         } else {
-            Toast.makeText(getActivity().getApplicationContext(), "Oops! Something went wrong." + result
-                    , Toast.LENGTH_LONG)
-                    .show();
+            snackbar = Snackbar.make(getView(), "Unable to retrieve pin history, please try again.", Snackbar.LENGTH_SHORT);
+            snackbar.show();
         }
-    }
-
-    @Override
-    protected  void onProgressUpdate(Integer... values) {
-        Snackbar.make(getView(), "Loading: " + values[0], Snackbar.LENGTH_LONG)
-                .show();
     }
 }
 }
