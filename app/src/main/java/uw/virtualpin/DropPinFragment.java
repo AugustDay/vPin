@@ -14,6 +14,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +90,9 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         show_text = (TextView) view.findViewById(R.id.show_button_text);
         show_text = (TextView) view.findViewById(R.id.show_button_text);
         mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map);
+                    .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         setupDropPinButton(view);
         setupEditTextShowHide(view);
 
@@ -118,11 +121,10 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
     public void onStart() {
         super.onStart();
         locationManager = new LocationManager(getActivity(), this);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+
+        mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        setMapLocation(locationManager.getLocation());
     }
 
     @Override
@@ -134,6 +136,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        setMapLocation(locationManager.getLocation());
 
     }
 
