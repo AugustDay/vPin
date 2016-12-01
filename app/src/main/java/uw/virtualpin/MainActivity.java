@@ -137,6 +137,9 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_history) {
             getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new MessageFragment()).commit();
+
+            getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new PostHistoryFragment()).addToBackStack(null).commit();
             setTitle("Post History");
 
