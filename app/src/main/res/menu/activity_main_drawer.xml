@@ -4,33 +4,18 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_inbox"
-            android:icon="@drawable/ic_menu_camera"
             android:title="Inbox" />
-        <item
-            android:id="@+id/nav_bookmarks"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Bookmarks" />
-        <item
-            android:id="@+id/nav_filter"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Filters" />
-        <item
-            android:id="@+id/nav_tools"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
-    </group>
 
-    <item android:title="">
-        <menu>
-            <item
-                android:id="@+id/nav_settings"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Settings" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send Feedback" />
-        </menu>
-    </item>
+        <item
+            android:id="@+id/nav_pin"
+            android:title="Pin" />
+        <item
+            android:id="@+id/nav_history"
+            android:title="Pin History" />
+
+        <item
+            android:id="@+id/nav_profile"
+            android:title="Profile" />
+    </group>
 
 </menu>
