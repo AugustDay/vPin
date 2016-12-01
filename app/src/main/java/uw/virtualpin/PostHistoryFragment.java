@@ -1,24 +1,21 @@
 package uw.virtualpin;
 
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,6 +33,7 @@ public class PostHistoryFragment extends Fragment {
     private ListView postsList;
     private ArrayList<Pin> pins;
     private String username;
+    private PostHistoryAsyncTask task;
 
 
     public PostHistoryFragment() {
@@ -60,11 +58,17 @@ public class PostHistoryFragment extends Fragment {
             username = (String) savedInstanceState.getSerializable("USERNAME");
         }
 
-        PostHistoryAsyncTask task = new PostHistoryAsyncTask();
+        task = new PostHistoryAsyncTask();
         task.execute(URL + username);
 
         return view;
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Snackbar.make(getView(), "Exiting Pin History", Snackbar.LENGTH_SHORT);
+        task.cancel(true);
     }
 
     private ArrayList<String> getMessages() {
@@ -177,12 +181,23 @@ private class PostHistoryAsyncTask extends AsyncTask<String, Integer, String> {
                     urlConnection.disconnect();
             }
         }
+
+        if(task.isCancelled()) {
+            snackbar.dismiss();
+        }
+
         return response;
     }
 
     @Override
     protected void onPostExecute(String result) {
-        if (result.length() > 5) {
+
+        if(task.isCancelled()) {
+            return;
+        }
+
+        if (result.length() > 10) {
+
             snackbar = Snackbar.make(getView(), "Pin history retrieved", Snackbar.LENGTH_SHORT);
             snackbar.show();
 
