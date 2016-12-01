@@ -161,14 +161,14 @@ public class RegisterActivity extends AppCompatActivity {
 
             //ONCE PHP IS SET UP PUT IN ORDER FOR REGISTRATION
 
-//            String firstName = editText_firstName.getText().toString();
-//            sb.append("&firstName=");
-//            sb.append(URLEncoder.encode(firstName, "UTF-8"));
-//
-//            String lastName = editText_lastName.getText().toString();
-//            sb.append("&lastName=");
-//            sb.append(URLEncoder.encode(lastName, "UTF-8"));
-//
+            String firstName = editText_firstName.getText().toString();
+            sb.append("&firstName=");
+            sb.append(URLEncoder.encode(firstName, "UTF-8"));
+
+            String lastName = editText_lastName.getText().toString();
+            sb.append("&lastName=");
+            sb.append(URLEncoder.encode(lastName, "UTF-8"));
+
 
 //            String firstName = editText_firstName.getText().toString();
 
