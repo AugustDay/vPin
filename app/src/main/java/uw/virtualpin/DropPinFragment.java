@@ -118,8 +118,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         locationManager = new LocationManager(getActivity(), this);
 
         mapFragment = (SupportMapFragment) getChildFragmentManager()
@@ -131,8 +131,6 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
     public void onPause() {
         super.onPause();
         locationManager.stopLocationManager();
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .remove(mapFragment).commit();
     }
 
     @Override

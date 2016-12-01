@@ -56,18 +56,16 @@ public class MainActivity extends AppCompatActivity
             }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new MessageFragment()).commit();
-    }
-
     /**
      *
      */
     @Override
     public void onBackPressed() {
+        this.setTitle("Inbox");
+
+        getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new MessageFragment()).commit();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -75,10 +73,6 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
 
-        this.setTitle("Inbox");
-
-        getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new MessageFragment()).commit();
     }
 
     /**
