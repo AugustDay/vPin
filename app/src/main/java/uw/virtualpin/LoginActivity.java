@@ -16,6 +16,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,6 +35,12 @@ public class LoginActivity extends AppCompatActivity {
     public Users mUsers;
     private SharedPreferences mSharedPreferences;
     public static int logInCount = 0;//use to fix rotate losing game states bug
+    private ArrayList<Users> usersList;
+
+
+    public LoginActivity() {
+        usersList = new ArrayList<>();
+    }
 
     /**
      * create activity and perform log in function, saving the user information to shared preference
@@ -100,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                             }
                             mUsers = new Users(username, password);
                             //storeInSharedPreference(username, password);
-                            new LoginTask().execute(new String[]{LOGIN_URL.toString()});
+                            new LoginTask().execute(LOGIN_URL);
 
                         }
                     });
@@ -118,42 +128,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
-//    /**test
-//     * store the username and password to shared preference
-//     * @param username
-//     * @param shawnhpassword
-//     */
-//    private void storeInSharedPreference(String username, String password) {
-////        ConnectivityManager connMgr = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-////
-////        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-////        if (networkInfo != null && networkInfo.isConnected()) {
-////            //Check if the login and password are valid
-////            //new LoginTask().execute(url);
-//
-//        try {
-//            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(openFileOutput(getString(R.string.LOGIN_FILE), Context.MODE_PRIVATE));
-//            outputStreamWriter.write("email = " + username + ";");
-//            outputStreamWriter.write("password = " + password);
-//            outputStreamWriter.close();
-////            Toast.makeText(this,"Stored in File Successfully!", Toast.LENGTH_LONG).show();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//////        } else {
-//////            Toast.makeText(this, "No network connection available. Cannot authenticate user",
-//////                    Toast.LENGTH_SHORT).show();
-//////            return;
-////        }
-//
-//        SharedPreferences.Editor editor = mSharedPreferences.edit();
-//        String s = getString(R.string.LOGGEDIN);
-//        String currentUser = getString(R.string.SharedPreference_currentUser);
-//        editor.putBoolean(s, true);
-//        editor.putString(currentUser, username);
-//        editor.commit();
-//    }
-
     private void askLocationPermissions() {
 
         ActivityCompat.requestPermissions(this,
@@ -164,6 +138,43 @@ public class LoginActivity extends AppCompatActivity {
                 new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
                 1);
 
+    }
+
+    /**
+     * Parses the json string, returns an error message if unsuccessful.
+     * Returns course list if success.
+     * @param jsonString
+     * @return reason or null if successful.
+     */
+    private void parseJSON(String jsonString) {
+        if (jsonString != null) {
+            try {
+                JSONArray jsonArray = new JSONArray(jsonString);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    Users user = new Users(jsonObject.getString("username")
+                            , jsonObject.getString("password"));
+
+                    usersList.add(user);
+                }
+            } catch (JSONException e) {
+                Toast.makeText(getApplicationContext(), "Unable to parse JSON", Toast.LENGTH_LONG)
+                        .show();
+            }
+        }
+    }
+
+    private boolean checkCreditialsValid() {
+
+        for(Users user : usersList) {
+            if(user.getUsername().equalsIgnoreCase(mUsers.getUsername())
+                    &&user.getPassword().equalsIgnoreCase(mUsers.getPassword())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private class LoginTask extends AsyncTask<String, Void, String> {
@@ -214,39 +225,24 @@ public class LoginActivity extends AppCompatActivity {
          */
         @Override
         protected void onPostExecute(String result) {
-            // Something wrong with the network or the URL.
-            if (result.startsWith("Unable to")) {
-                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
-                        .show();
-                return;
-            }
+            if(!result.contains("Unable to")) {
 
-            List<Users> usersList = new ArrayList<Users>();
-            result = Users.parseUsersJSON(result, usersList);
-            // Something wrong with the JSON returned.
-            if (result != null) {
-                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG)
-                        .show();
-                return;
-            }
+                parseJSON(result);
 
-            // Everything is good, show the list of courses.
-            boolean found = false;
-            if (!usersList.isEmpty()) {
-                for (Users user : usersList){
-                    if (user.getUsername().equals(mUsers.getUsername())
-                            && user.getPassword().equals(mUsers.getPassword())){
-                        Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_LONG).show();
-                        found = true;
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        intent.putExtra("USERNAME", mUsers.getUsername());
-                        startActivity(intent);
-                        finish();
-                    }
+                if(checkCreditialsValid()) {
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.putExtra("USERNAME", mUsers.getUsername());
+                    startActivity(intent);
+                    finish();
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Invalid login information.", Toast.LENGTH_LONG)
+                            .show();
                 }
-            }
-            if (!found){
-                Toast.makeText(getApplicationContext(), "Login fail, try again", Toast.LENGTH_LONG).show();
+
+            } else {
+                Toast.makeText(getApplicationContext(), "Login failed, please try again.", Toast.LENGTH_LONG)
+                        .show();
             }
         }
     }

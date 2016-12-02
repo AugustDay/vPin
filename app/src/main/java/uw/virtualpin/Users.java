@@ -73,37 +73,4 @@ public class Users {
      * @return String email
      */
     String getEmail(){ return mEmail;  }
-
-
-
-    /**
-     * Parses the json string, returns an error message if unsuccessful.
-     * Returns course list if success.
-     * @param usersJSON
-     * @return reason or null if successful.
-     */
-    public static String parseUsersJSON(String usersJSON, List<Users> usersList) {
-        String reason = null;
-        if (usersJSON != null) {
-            try {
-                JSONArray arr = new JSONArray(usersJSON);
-                for (int i = 0; i < arr.length(); i++) {
-                    JSONObject obj = arr.getJSONObject(i);
-                    Users CurUser = new Users(obj.getString(Users.PASSWORD), obj.getString(Users.USERNAME));
-                    usersList.add(CurUser);
-                }
-            } catch (JSONException e) {
-                reason =  "Unable to parse data, Reason: " + e.getMessage();
-            }
-
-        }
-        return reason;
-    }
-
-    /**
-     * Created by Tyler on 11/20/2016.
-     */
-
-    public static class ImageManager {
-    }
 }

@@ -82,7 +82,6 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
 
         final View view = inflater.inflate(R.layout.fragment_drop_pin, container, false);
         final Button uploadImageButton = (Button) view.findViewById(R.id.uploadImageButton);
-        final Users users = new Users();
         imageManager = new ImageManager();
         textGps = (TextView) view.findViewById(R.id.gps_location_text);
         messageText = (EditText) view.findViewById(R.id.messageText);
