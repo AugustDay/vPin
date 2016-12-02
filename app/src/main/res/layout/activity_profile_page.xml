@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/rl_Container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -30,7 +31,8 @@
                 android:clickable="true"
                 android:elevation="4dp"
                 android:padding="20dp"
-                android:text="E-Mail" />
+                android:text="E-Mail"
+                android:id="@+id/user_profile_email" />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -42,7 +44,8 @@
                 android:clickable="true"
                 android:elevation="4dp"
                 android:padding="20dp"
-                android:text="Age" />
+                android:text="username"
+                android:id="@+id/user_profile_username" />
 
             <TextView
                 android:layout_width="fill_parent"
@@ -55,7 +58,7 @@
                 android:text="Number of Posts - " />
 
             <Button
-                android:text="Update Info"
+                android:text="@string/update_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/button2" />
@@ -96,12 +99,12 @@
                 android:id="@+id/user_profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="76dp"
                 android:textColor="#fff"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:text="Profile Name" />
+                android:text="Profile Name"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" />
 
         </RelativeLayout>
 
