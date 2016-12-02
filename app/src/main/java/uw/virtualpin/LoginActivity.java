@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             Log.i("SP currentuser: ", currentUser);
         }
 
-        final EditText editText_username = (EditText) findViewById(R.id.editText_email);
+        final EditText editText_username = (EditText) findViewById(R.id.editText_username);
         final EditText editText_password = (EditText) findViewById(R.id.editText_password);
         final Button button_login = (Button) findViewById(R.id.button_login);
         final Button button_goToRegister = (Button) findViewById(R.id.button_goToRegister);
@@ -231,7 +231,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if(checkCreditialsValid()) {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.putExtra("USERNAME", mUsers.getUsername());
+                    intent.putExtra("USERNAME", mUsers.getPassword());
                     startActivity(intent);
                     finish();
 
