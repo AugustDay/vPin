@@ -28,6 +28,7 @@ public class Users {
         this.mUsername = username;
         this.mPassword = password;
     }
+
     /**
      * constructor of user
      * @param username
@@ -99,4 +100,10 @@ public class Users {
         return reason;
     }
 
+    /**
+     * Created by Tyler on 11/20/2016.
+     */
+
+    public static class ImageManager {
+    }
 }
