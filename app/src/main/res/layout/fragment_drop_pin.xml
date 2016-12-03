@@ -4,7 +4,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context="uw.virtualpin.DropPinFragment"
-    android:id="@+id/content_drop_pin">
+    android:id="@+id/content_drop_pin"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <TextView
         android:text="Unhide map..."
