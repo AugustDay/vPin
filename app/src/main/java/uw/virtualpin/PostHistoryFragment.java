@@ -194,10 +194,6 @@ private class PostHistoryAsyncTask extends AsyncTask<String, Integer, String> {
     @Override
     protected void onPostExecute(String result) {
 
-        if(task.isCancelled()) {
-            return;
-        }
-
         if (result.length() > 10) {
 
             snackbar = Snackbar.make(getView(), "Pin history retrieved", Snackbar.LENGTH_SHORT);
