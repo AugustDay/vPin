@@ -89,11 +89,12 @@ public class PinFragment extends Fragment {
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
             pinDetails.add(jsonObject.getString("image"));
-            setupPinDetails();
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        
+        setupPinDetails();
     }
 
     private void openGallery() {
