@@ -108,7 +108,6 @@ public class PostHistoryFragment extends Fragment {
                 pinData.add(pin.getUserName());
                 pinData.add("(" + pin.getLatitude() + ", " + pin.getLongitude() + ")");
                 pinData.add(pin.getMessage());
-                pinData.add(pin.getEncodedImage());
 
                 PinFragment pinFragment = new PinFragment();
                 Bundle args = new Bundle();
@@ -131,7 +130,7 @@ public class PostHistoryFragment extends Fragment {
                         ,Double.parseDouble(jsonObject.getString("latitude"))
                         ,Double.parseDouble(jsonObject.getString("longitude"))
                         ,jsonObject.getString("message")
-                        ,jsonObject.getString("image"));
+                        ,null);
 
                 pin.setId(jsonObject.getString("pinID"));
 
