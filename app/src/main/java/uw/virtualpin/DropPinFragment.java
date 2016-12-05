@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -81,7 +80,6 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
 
         final View view = inflater.inflate(R.layout.fragment_drop_pin, container, false);
         final Button uploadImageButton = (Button) view.findViewById(R.id.uploadImageButton);
-        final Users users = new Users();
         imageManager = new ImageManager();
         textGps = (TextView) view.findViewById(R.id.gps_location_text);
         messageText = (EditText) view.findViewById(R.id.messageText);
@@ -89,7 +87,9 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         show_text = (TextView) view.findViewById(R.id.show_button_text);
         show_text = (TextView) view.findViewById(R.id.show_button_text);
         mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map);
+                    .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         setupDropPinButton(view);
         setupEditTextShowHide(view);
 
@@ -118,11 +118,10 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
     public void onStart() {
         super.onStart();
         locationManager = new LocationManager(getActivity(), this);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+
+        mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        setMapLocation(locationManager.getLocation());
     }
 
     @Override
@@ -134,6 +133,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        setMapLocation(locationManager.getLocation());
 
     }
 
@@ -199,11 +199,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                     imageString = imageManager.convertBitmapToByteArray(image);
                 }
 
-                if (imageString == "NO_IMAGE" && messageText.getText().toString().length() == 0) {
-                    Toast.makeText(getActivity().getApplicationContext()
-                            , "Please enter a message or upload a photo"
-                            , Toast.LENGTH_LONG)
-                            .show();
+                if (imageString.equalsIgnoreCase("NO_IMAGE") && messageText.getText().toString().length() == 0) {
+                    Snackbar.make(getView(), "Please enter a message or upload a photo.", Snackbar.LENGTH_LONG).show();
                 } else {
 
                     try {
@@ -219,10 +216,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                         closeSoftKeyboard();
 
                     } catch (Exception e) {
-                        Toast.makeText(getActivity().getApplicationContext()
-                                , "Error loading location, Pin not created."
-                                , Toast.LENGTH_LONG)
-                                .show();
+                        Snackbar.make(getView(), "Error loading location. Pin not created.", Snackbar.LENGTH_LONG);
                     }
                 }
             }
@@ -238,6 +232,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                 if (hasFocus) {
                     setViews(false);
                 } else {
+                    setViews(true);
                 }
             }
         });
@@ -333,9 +328,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                 snackbar = Snackbar.make(getView(), "Pin created.", Snackbar.LENGTH_SHORT);
                 snackbar.show();
             } else {
-                Toast.makeText(getActivity().getApplicationContext(), "Oops! Something went wrong." + result
-                        , Toast.LENGTH_LONG)
-                        .show();
+                snackbar = Snackbar.make(getView(), "Error, please reload this page.", Snackbar.LENGTH_LONG);
+                snackbar.show();
             }
         }
     }

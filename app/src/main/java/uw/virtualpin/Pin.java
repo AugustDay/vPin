@@ -4,9 +4,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 /**
  * Created by Tyler on 11/19/2016.
@@ -16,7 +13,7 @@ public class Pin {
 
     public final static String PIN_URL =
             "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=new_pin";
-
+    private String id;
     private String message;
     private String userName;
     private double latitude;
@@ -30,6 +27,14 @@ public class Pin {
         this.latitude = latitude;
         this.longitude = longitude;
         this.encodedImage = encodedImage;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public double getLongitude() {
