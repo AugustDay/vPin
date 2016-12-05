@@ -4,7 +4,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context="uw.virtualpin.DropPinFragment"
-    android:id="@+id/content_drop_pin">
+    android:id="@+id/content_drop_pin"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <TextView
         android:text="Unhide map..."
@@ -41,19 +43,24 @@
 
         <Button
             android:text="Upload Image..."
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/uploadImageButton"/>
+            android:id="@+id/uploadImageButton"
+            android:background="#3366ff"
+            android:layout_weight="1"/>
 
         <Button
             android:text="Pin it!"
             android:id="@+id/postButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#00ff00"
+            android:layout_weight="1"/>
         </LinearLayout>
 
     <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:paddingTop="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/selectedImage"/>
 </LinearLayout>

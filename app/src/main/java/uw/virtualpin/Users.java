@@ -13,20 +13,33 @@ import java.util.List;
 
 public class Users {
 
-    private String mUsername;
-    private String mPassword;
-    public static final String USERNAME = "username", PASSWORD = "password";
+    public String mUsername;
+    public String mPassword;
+    public String mFirstName;
+    public String mLastName;
+    public String mEmail;
 
-    public Users() {}
+    public static final String USERNAME = "username", PASSWORD = "password",
+            FIRSTNAME = "firstname", LAStNAME = "lastname", EMAIL ="email";
+
+
+
+    public Users(String password, String username){
+        this.mUsername = username;
+        this.mPassword = password;
+    }
 
     /**
      * constructor of user
      * @param username
      * @param password
      */
-    Users(String username, String password){
+    public Users(String username, String password, String firstName, String lastName, String email){
         this.mUsername = username;
         this.mPassword = password;
+        this.mFirstName = firstName;
+        this.mLastName = lastName;
+        this.mEmail = email;
     }
 
     /**
@@ -43,35 +56,21 @@ public class Users {
     String getPassword(){
         return mPassword;
     }
-
     /**
-     * Parses the json string, returns an error message if unsuccessful.
-     * Returns course list if success.
-     * @param usersJSON
-     * @return reason or null if successful.
+     * get firstName
+     * @return String firstName
      */
-    public static String parseUsersJSON(String usersJSON, List<Users> usersList) {
-        String reason = null;
-        if (usersJSON != null) {
-            try {
-                JSONArray arr = new JSONArray(usersJSON);
-                for (int i = 0; i < arr.length(); i++) {
-                    JSONObject obj = arr.getJSONObject(i);
-                    Users course = new Users(obj.getString(Users.USERNAME), obj.getString(Users.PASSWORD));
-                    usersList.add(course);
-                }
-            } catch (JSONException e) {
-                reason =  "Unable to parse data, Reason: " + e.getMessage();
-            }
-
-        }
-        return reason;
+    String getFirstName(){
+        return mFirstName;
     }
-
     /**
-     * Created by Tyler on 11/20/2016.
+     * get lastName
+     * @return String lastName
      */
-
-    public static class ImageManager {
-    }
+    String getLastName(){ return mLastName;  }
+    /**
+     * get email
+     * @return String email
+     */
+    String getEmail(){ return mEmail;  }
 }
