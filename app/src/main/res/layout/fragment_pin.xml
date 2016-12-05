@@ -32,16 +32,16 @@
         android:inputType="textAutoCorrect|textCapSentences|textMultiLine"
         android:id="@+id/messageTextHistory"/>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageViewHistory"/>
-
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/updateButton"
         android:textAlignment="center"
         android:text="Update" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewHistory"/>
 
 </LinearLayout>

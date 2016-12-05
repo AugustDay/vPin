@@ -201,7 +201,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                 }
 
                 if (imageString.equalsIgnoreCase("NO_IMAGE") && messageText.getText().toString().length() == 0) {
-                    Snackbar.make(getView(), "Please enter a message or upload a photo.", Snackbar.LENGTH_LONG);
+                    Snackbar.make(getView(), "Please enter a message or upload a photo.", Snackbar.LENGTH_LONG).show();
                 } else {
 
                     try {

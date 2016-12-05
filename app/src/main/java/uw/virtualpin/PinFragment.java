@@ -1,11 +1,8 @@
 package uw.virtualpin;
 
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -29,8 +26,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-import static android.app.Activity.RESULT_OK;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +45,7 @@ public class PinFragment extends Fragment {
     private GetPinAsyncTask getPinAsyncTask;
     private UpdatePinAsyncTask updatePinAsyncTask;
     private static final int PICK_IMAGE = 100;
+    boolean filled;
 
 
     public PinFragment() {
@@ -63,21 +59,20 @@ public class PinFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_pin, container, false);
         pinDetails = getArguments().getStringArrayList("PINS");
 
+        filled = false;
         imageManager = new ImageManager();
-        getPinAsyncTask = new GetPinAsyncTask();
-        getPinAsyncTask.execute(GET_URL + pinDetails.get(0));
         creatorText = (TextView) view.findViewById(R.id.creatorTextHistory);
         locationText = (TextView) view.findViewById(R.id.locationTextHistory);
         messageText = (EditText) view.findViewById(R.id.messageTextHistory);
         imageView = (ImageView) view.findViewById(R.id.imageViewHistory);
         updateButton = (Button) view.findViewById(R.id.updateButton);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openGallery();
-            }
-        });
+//        imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openGallery();
+//            }
+//        });
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,21 +81,39 @@ public class PinFragment extends Fragment {
                         (((BitmapDrawable) imageView.getDrawable()).getBitmap());
                 String completeUrl = UPDATE_URL + pinDetails.get(0);
 
+                if(message.equalsIgnoreCase(pinDetails.get(3))) {
+                    Snackbar.make(view, "No message changes detected.", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
+                if(message.length() == 0) {
+                    Snackbar.make(view, "Cannot enter an empty message.", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
                 if(message.length() > 0) {
                     completeUrl += "&message=" + message;
                 }
 
                 updatePinAsyncTask = new UpdatePinAsyncTask();
-                updatePinAsyncTask.execute(UPDATE_URL);
+                updatePinAsyncTask.execute(completeUrl);
             }
         });
 
         return view;
     }
 
+    public void onStart() {
+        super.onStart();
+        if(filled == false) {
+            filled = true;
+            getPinAsyncTask = new GetPinAsyncTask();
+            getPinAsyncTask.execute(GET_URL + pinDetails.get(0));
+        }
+    }
+
     private void setupPinDetails() {
         try {
-
             creatorText.setText("Created by: " + pinDetails.get(1));
             locationText.setText("Location: " + pinDetails.get(2));
             messageText.setText(pinDetails.get(3));
@@ -123,19 +136,19 @@ public class PinFragment extends Fragment {
         setupPinDetails();
     }
 
-    private void openGallery() {
-        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, PICK_IMAGE);
-    }
-
-    @Override
-    public void onActivityResult(final int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
-            Uri imageUri = data.getData();
-            imageView.setImageURI(imageUri);
-        }
-    }
+//    private void openGallery() {
+//        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+//        startActivityForResult(gallery, PICK_IMAGE);
+//    }
+//
+//    @Override
+//    public void onActivityResult(final int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+//            Uri imageUri = data.getData();
+//            imageView.setImageURI(imageUri);
+//        }
+//    }
 
     private class GetPinAsyncTask extends AsyncTask<String, Integer, String> {
 
@@ -147,6 +160,9 @@ public class PinFragment extends Fragment {
             HttpURLConnection urlConnection = null;
             for (String url : urls) {
                 try {
+                    snackbar = Snackbar.make(getView(), "Laoding pin, please wait...", Snackbar.LENGTH_INDEFINITE);
+                    snackbar.show();
+
                     URL urlObject = new URL(url);
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
 

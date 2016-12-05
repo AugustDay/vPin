@@ -71,8 +71,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, this.getClass());
         intent.putExtra("USERNAME", username);
         startActivity(intent);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new MessageFragment()).commit();
+        finish();
     }
 
     /**
