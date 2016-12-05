@@ -1,10 +1,9 @@
 package uw.virtualpin;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,20 +12,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import uw.virtualpin.message.MessageContent;
+import uw.virtualpin.pin.Pin;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MessageFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, PinListFragment.OnListFragmentInteractionListener {
 
     /**
-     *
+     *  Initialize the main activity
      * @param savedInstanceState
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -49,11 +47,11 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new MessageFragment()).commit();
+                .replace(R.id.fragment_container, new PinListFragment()).commit();
     }
 
     /**
-     *
+     *  Determines what happens when the back button is pressed
      */
     @Override
     public void onBackPressed() {
@@ -66,13 +64,13 @@ public class MainActivity extends AppCompatActivity
 
         this.setTitle("Inbox");
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new MessageFragment()).commit();
+                .replace(R.id.fragment_container, new PinListFragment()).commit();
     }
 
     /**
-     *
+     * Initialize menu options
      * @param menu
-     * @return
+     * @return boolean
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,7 +80,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     *
+     *  Handle action bar item clicks
      * @param item
      * @return boolean
      */
@@ -97,7 +95,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_logout) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
-            finish();
         }
 
         if (id == R.id.drop_pin) {
@@ -109,7 +106,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     *
+     *  Handle navigation item clicks here
      * @param item
      * @return onNavigationItemSelected
      */
@@ -146,7 +143,7 @@ public class MainActivity extends AppCompatActivity
     {
         if (title == "Inbox") {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new MessageFragment()).commit();
+                    .replace(R.id.fragment_container, new PinListFragment()).commit();
 
             this.setTitle("Inbox");
         }
@@ -160,7 +157,29 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(MessageContent.MessageItem item) {
+    public void onListFragmentInteraction(Pin item) {
+
+/*        CourseDetailFragment courseDetailFragment = new CourseDetailFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(CourseDetailFragment.COURSE_ITEM_SELECTED, item);
+        courseDetailFragment.setArguments(args);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, courseDetailFragment)
+                .addToBackStack(null)
+                .commit();*/
+
+        PinDetailFragment pinDetailFragment = new PinDetailFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(PinDetailFragment.PIN_ITEM_SELECTED, item);
+        pinDetailFragment.setArguments(args);
+        FragmentTransaction transaction = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, pinDetailFragment)
+                .addToBackStack(null);
+
+        // Commit the transaction
+        transaction.commit();
 
     }
 }

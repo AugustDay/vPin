@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="uw.virtualpin.MessageFragment"
-    tools:listitem="@layout/fragment_message" />
+    tools:context="uw.virtualpin.PinListFragment"
+    tools:listitem="@layout/fragment_pin" />
