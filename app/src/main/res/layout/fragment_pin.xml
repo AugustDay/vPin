@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     tools:context="uw.virtualpin.PinFragment">
 
@@ -10,7 +10,7 @@
         android:paddingBottom="10dp"
         android:textStyle="bold"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/creatorTextHistory"/>
 
     <TextView
@@ -32,7 +32,17 @@
         android:inputType="textAutoCorrect|textCapSentences|textMultiLine"
         android:id="@+id/messageTextHistory"/>
 
+    <Button
+        android:background="#00ff00"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/updateButton"
+        android:textAlignment="center"
+        android:text="Update"
+        android:paddingBottom="5dp"/>
+
     <ImageView
+        android:paddingTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/imageViewHistory"/>

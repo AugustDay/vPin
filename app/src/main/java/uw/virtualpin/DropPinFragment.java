@@ -199,8 +199,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                     imageString = imageManager.convertBitmapToByteArray(image);
                 }
 
-                if (imageString == "NO_IMAGE" && messageText.getText().toString().length() == 0) {
-                    Snackbar.make(getView(), "Please enter a message or upload a photo.", Snackbar.LENGTH_LONG);
+                if (imageString.equalsIgnoreCase("NO_IMAGE") && messageText.getText().toString().length() == 0) {
+                    Snackbar.make(getView(), "Please enter a message or upload a photo.", Snackbar.LENGTH_LONG).show();
                 } else {
 
                     try {

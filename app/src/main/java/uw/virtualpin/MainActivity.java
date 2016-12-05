@@ -129,8 +129,10 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new MessageFragment()).commit();
+        Intent intent = new Intent(this, this.getClass());
+        intent.putExtra("USERNAME", username);
+        startActivity(intent);
+        finish();
     }
 
     /**
@@ -198,12 +200,12 @@ public class MainActivity extends AppCompatActivity
                     .replace(R.id.fragment_container, new MessageFragment()).commit();
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new PostHistoryFragment()).addToBackStack(null).commit();
+                    .replace(R.id.fragment_container, new PostHistoryFragment()).commit();
             setTitle("Post History");
 
         } else if (id == R.id.nav_pin) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new DropPinFragment()).addToBackStack(null).commit();
+                    .replace(R.id.fragment_container, new DropPinFragment()).commit();
             setTitle("Drop Pin");
         }
 
@@ -220,13 +222,13 @@ public class MainActivity extends AppCompatActivity
     {
         if (title == "Inbox") {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new MessageFragment()).addToBackStack(null).commit();
+                    .replace(R.id.fragment_container, new MessageFragment()).commit();
 
             this.setTitle("Inbox");
         }
         else if (title == "Drop pin") {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new DropPinFragment()).addToBackStack(null).commit();
+                    .replace(R.id.fragment_container, new DropPinFragment()).commit();
 
             // change mainbar title
             this.setTitle("Drop pin");
