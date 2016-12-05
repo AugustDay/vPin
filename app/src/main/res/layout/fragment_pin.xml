@@ -33,13 +33,16 @@
         android:id="@+id/messageTextHistory"/>
 
     <Button
+        android:background="#00ff00"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/updateButton"
         android:textAlignment="center"
-        android:text="Update" />
+        android:text="Update"
+        android:paddingBottom="5dp"/>
 
     <ImageView
+        android:paddingTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/imageViewHistory"/>
