@@ -132,13 +132,6 @@ public class PinFragment extends Fragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-<<<<<<< HEAD
-
-        setupPinDetails();
-    }
-=======
->>>>>>> refs/remotes/origin/Post_History_Feature
-
         setupPinDetails();
     }
 
