@@ -188,27 +188,21 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
             imageView.setImageURI(imageUri);
         }
     }
-/////////////////////////////////
+
     private void setupDropPinButton(View view) {
         final Button pinButton = (Button) view.findViewById(R.id.postButton);
         pinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String imageString = "NO_IMAGE";
-                /////////////////////////
+
                 if (imageView.getDrawable() != null) {
                     Bitmap image = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
                     imageString = imageManager.convertBitmapToByteArray(image);
                 }
-<<<<<<< HEAD
 
                 if (imageString.equalsIgnoreCase("NO_IMAGE") && messageText.getText().toString().length() == 0) {
                     Snackbar.make(getView(), "Please enter a message or upload a photo.", Snackbar.LENGTH_LONG).show();
-=======
-                /////////////////////////
-                if (imageString == "NO_IMAGE" && messageText.getText().toString().length() == 0) {
-                    Snackbar.make(getView(), "Please enter a message or upload a photo.", Snackbar.LENGTH_LONG);
->>>>>>> refs/remotes/origin/Profile_Page
                 } else {
 
                     try {
