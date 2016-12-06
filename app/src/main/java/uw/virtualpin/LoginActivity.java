@@ -32,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String LOGIN_URL
             = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=select*users";
+    private static final String USER_DATA
+            = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=get_userdata&username=";
     public Users mUsers;
     private SharedPreferences mSharedPreferences;
     public static int logInCount = 0;//use to fix rotate losing game states bug
@@ -111,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
                             mUsers = new Users(username, password);
                             //storeInSharedPreference(username, password);
                             new LoginTask().execute(LOGIN_URL);
+                            new GetUserData().execute(USER_DATA+mUsers.getPassword());
 
                         }
                     });
@@ -153,9 +156,15 @@ public class LoginActivity extends AppCompatActivity {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                    Users user = new Users(jsonObject.getString("username")
-                            , jsonObject.getString("password"));
-
+                    Users user = new Users(jsonObject.getString("username"), jsonObject.getString("password"));
+                    try {
+                        user.mLastName  = jsonObject.getString("Lname");
+                        user.mFirstName = jsonObject.getString("Fname");
+                        user.mEmail     = jsonObject.getString("email");
+                    }
+                    catch(Exception e) {
+                        // no op because this is soo stupid.
+                    }
                     usersList.add(user);
                 }
             } catch (JSONException e) {
@@ -243,6 +252,58 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(getApplicationContext(), "Login failed, please try again.", Toast.LENGTH_LONG)
                         .show();
+            }
+        }
+    }
+
+    private class GetUserData extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String response = "";
+            Log.i("444 start: ", response);
+            HttpURLConnection urlConnection = null;
+            for (String url : urls) {
+                try {
+                    URL urlObject = new URL(url);
+                    urlConnection = (HttpURLConnection) urlObject.openConnection();
+
+                    InputStream content = urlConnection.getInputStream();
+
+                    BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                    String s = "";
+                    while ((s = buffer.readLine()) != null) {
+                        response += s;
+                    }
+
+                } catch (Exception e) {
+                    response = "Unable to download the list of users, Reason: ";
+                    if (e.getMessage().startsWith("Unable to resolve host")){
+                        response += "Could not contact remote server.  Check your internet connection.";
+                    } else {
+                        response += e.getMessage();
+                    }
+
+                }
+                finally {
+                    if (urlConnection != null)
+                        urlConnection.disconnect();
+                }
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if(!result.contains("Unable to")) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("[");
+                sb.append(result);
+                sb.append("]");
+                parseJSON(sb.toString());
+                UserLocalStore localUserStore = new UserLocalStore(getBaseContext());
+                localUserStore.storeUserData(usersList.get(usersList.size() - 1));
+                localUserStore.setUsersLoggedin(true);
             }
         }
     }

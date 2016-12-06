@@ -55,13 +55,8 @@
                 android:clickable="true"
                 android:elevation="4dp"
                 android:padding="20dp"
-                android:text="Number of Posts - " />
-
-            <Button
-                android:text="@string/update_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/button2" />
+                android:text="Number of Posts - "
+                android:id="@+id/user_profile_postCount" />
 
         </LinearLayout>
 

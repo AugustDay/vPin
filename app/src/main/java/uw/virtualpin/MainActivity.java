@@ -22,12 +22,11 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MessageFragment.OnListFragmentInteractionListener {
 
 
-        //EditText etUserName, etPassword, etFirstName, etLastName, etEmail;
-        UserLocalStore userLocalStore;
 
+
+    UserLocalStore userLocalStore;
 
     String username;
-
 
     /**
      *
@@ -40,23 +39,6 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        //setContentView(R.layout.activity_profile_page);
-        // etFirstName = (EditText) findViewById(R.id.user_profile_name);
-        //etEmail =  (EditText)(findViewById(R.id.user_profile_email));
-        //etUserName =  (EditText)(findViewById(R.id.user_profile_username));
-
-        userLocalStore = new UserLocalStore(this);
-
-
-        /*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -77,44 +59,21 @@ public class MainActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new MessageFragment()).commit();
 
+            userLocalStore = new UserLocalStore(this);
+
             if (savedInstanceState == null) {
                 Bundle extras = getIntent().getExtras();
                 if (extras == null) {
                     username = null;
                 } else {
                     username = extras.getString("USERNAME");
+                    userLocalStore.getLoggedinUser();
+
                 }
             } else {
                 username = (String) savedInstanceState.getSerializable("USERNAME");
             }
-
     }
-//
-//    @Override
-//    protected  void onStart(){
-//        super.onStart();
-//
-//        if (authenticate() == true){
-//            displayUserDetails();
-//        }
-//    }
-//
-//
-//    private boolean authenticate(){
-//        return userLocalStore.getUserLoggedIn();
-//    }
-//
-//    private void displayUserDetails(){
-//        Users loggedInUser = userLocalStore.getLoggedinUser();
-//
-//        //etUserName.setText((CharSequence) loggedInUser.mUsername);
-//        etEmail.setText(loggedInUser.mUsername);
-//       // etEmail.setText((CharSequence) loggedInUser.mEmail);
-//      //  etFirstName.setText(loggedInUser.mFirstName);
-//    }
-
-
-
     /**
      *
      */
@@ -134,7 +93,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     *
      * @param menu
      * @return
      */
@@ -164,6 +122,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_logout) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
+            userLocalStore.clearUserData();
             finish();
         }
 
