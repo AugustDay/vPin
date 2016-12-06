@@ -173,6 +173,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         textCoordinates.setText(textLocation);
     }
 
+
+    ///////////////////CODE FOR SELECTING IMAGE
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
@@ -186,21 +188,27 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
             imageView.setImageURI(imageUri);
         }
     }
-
+/////////////////////////////////
     private void setupDropPinButton(View view) {
         final Button pinButton = (Button) view.findViewById(R.id.postButton);
         pinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String imageString = "NO_IMAGE";
-
+                /////////////////////////
                 if (imageView.getDrawable() != null) {
                     Bitmap image = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
                     imageString = imageManager.convertBitmapToByteArray(image);
                 }
+<<<<<<< HEAD
 
                 if (imageString.equalsIgnoreCase("NO_IMAGE") && messageText.getText().toString().length() == 0) {
                     Snackbar.make(getView(), "Please enter a message or upload a photo.", Snackbar.LENGTH_LONG).show();
+=======
+                /////////////////////////
+                if (imageString == "NO_IMAGE" && messageText.getText().toString().length() == 0) {
+                    Snackbar.make(getView(), "Please enter a message or upload a photo.", Snackbar.LENGTH_LONG);
+>>>>>>> refs/remotes/origin/Profile_Page
                 } else {
 
                     try {
@@ -290,7 +298,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                 try {
                     URL urlObject = new URL(url);
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
-
+                    //////////////////
                     if(pin.getEncodedImage() != "NO_IMAGE") {
 
                         urlConnection.setDoOutput(true);
@@ -301,7 +309,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                         wr.write(data);
                         wr.flush();
                     }
-
+                    //////////////////
                     InputStream content = urlConnection.getInputStream();
 
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
