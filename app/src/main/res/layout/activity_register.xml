@@ -39,7 +39,7 @@
         android:inputType="text"
         android:ems="10"
         android:id="@+id/editText_firstName"
-        android:hint="First Name"
+        android:hint="First Name:"
         android:layout_below="@+id/editText_email"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
