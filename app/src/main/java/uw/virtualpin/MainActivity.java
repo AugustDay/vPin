@@ -1,8 +1,6 @@
 package uw.virtualpin;
 
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -24,8 +22,6 @@ import com.google.android.gms.location.LocationServices;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, PinListFragment.OnListFragmentInteractionListener {
 
-    private Location mCurrentLocation;
-    private LocationManager locationManager;
     UserLocalStore userLocalStore;
 
     String username;
@@ -42,12 +38,9 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        userLocalStore = new UserLocalStore(this);
 
-        locationManager = new LocationManager(this);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -55,43 +48,20 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-   /*     getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new PinListFragment()).commit();
-
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new PinListFragment()).commit();*/
-
+        userLocalStore = new UserLocalStore(this);
         setFragment("Inbox");
-
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras == null) {
-                username = null;
-
-            getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new PinListFragment()Fragment()).commit();
-
-            userLocalStore = new UserLocalStore(this);
-
-            if (savedInstanceState == null) {
-                Bundle extras = getIntent().getExtras();
-                if (extras == null) {
                     username = null;
                 } else {
-                    username = extras.getString("USERNAME");
-                    userLocalStore.getLoggedinUser();
-
-                }
-            } else {
                 username = extras.getString("USERNAME");
+                userLocalStore.getLoggedinUser();
+
             }
-        } else {
+            } else {
             username = (String) savedInstanceState.getSerializable("USERNAME");
         }
-
-    }
-
     }
     /**
      *
@@ -171,6 +141,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_profile) {
             Intent intent = new Intent(this, ProfilePage.class);
+            intent.putExtra("USERNAME", username);
             startActivity(intent);
 
         } else if (id == R.id.nav_history) {
@@ -222,7 +193,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     public void onListFragmentInteraction(Pin item) {
 
@@ -238,5 +208,4 @@ public class MainActivity extends AppCompatActivity
         // Commit the transaction
         transaction.commit();
     }
-
 }
