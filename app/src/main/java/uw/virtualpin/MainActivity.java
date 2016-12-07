@@ -1,8 +1,6 @@
 package uw.virtualpin;
 
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -10,28 +8,14 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-<<<<<<< HEAD
-=======
-import android.widget.EditText;
->>>>>>> refs/remotes/origin/bada2
 import android.widget.TextView;
-
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, PinListFragment.OnListFragmentInteractionListener {
-<<<<<<< HEAD
-
-
-=======
->>>>>>> bada2
-
 
     //EditText etUserName, etPassword, etFirstName, etLastName, etEmail;
     UserLocalStore userLocalStore;
@@ -51,8 +35,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-<<<<<<< HEAD
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -65,20 +47,18 @@ public class MainActivity extends AppCompatActivity
         userLocalStore = new UserLocalStore(this);
 
 
-        setFragment("Inbox");
-=======
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+//        setFragment("Inbox");
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+//        drawer.setDrawerListener(toggle);
+//        toggle.syncState();
+//
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        navigationView.setNavigationItemSelectedListener(this);
 
         setFragment("Inbox");
         userLocalStore = new UserLocalStore(this);
->>>>>>> bada2
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -86,10 +66,7 @@ public class MainActivity extends AppCompatActivity
                 username = null;
             } else {
                 username = extras.getString("USERNAME");
-<<<<<<< HEAD
                 userLocalStore.getLoggedinUser();
-=======
->>>>>>> bada2
             }
         } else {
             username = (String) savedInstanceState.getSerializable("USERNAME");
@@ -191,6 +168,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_profile) {
             getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).commit();
             Intent intent = new Intent(this, ProfilePage.class);
+            intent.putExtra("USERNAME", username);
             startActivity(intent);
             finish();
 

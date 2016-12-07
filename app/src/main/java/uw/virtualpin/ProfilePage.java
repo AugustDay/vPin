@@ -105,6 +105,7 @@ public class ProfilePage extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("USERNAME", username);
         startActivity(intent);
+        finish();
     }
 
     /**

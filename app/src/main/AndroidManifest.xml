@@ -73,12 +73,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD8Bp-cZUFwn4-MhgQ6cvkKs6hAMaCdtds" />
-<<<<<<< HEAD
 
         <activity android:name=".ProfilePage"
             android:screenOrientation="portrait"></activity>
-=======
->>>>>>> refs/remotes/origin/bada2
     </application>
 
 </manifest>
