@@ -122,8 +122,8 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         TextView textView = (TextView) findViewById(R.id.menuUsernameText);
-        //textView.setText(username.toUpperCase());
-        //textView.setTextSize(14);
+        textView.setText(username.toUpperCase());
+        textView.setTextSize(14);
         return true;
     }
 
@@ -199,13 +199,9 @@ public class MainActivity extends AppCompatActivity
     private void setFragment(String title)
     {
         if (title == "Inbox") {
-            /*getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new PinListFragment()).commit();*/
 
             PinListFragment pinListFragment = new PinListFragment();
             Bundle args = new Bundle();
-            //args.putDouble(PinListFragment.CURRENT_LATITUDE, locationManager.getCurentLocation().getLatitude());
-            //args.putDouble(PinListFragment.CURRENT_LONGITUDE, locationManager.getCurentLocation().getLongitude());
 
             pinListFragment.setArguments(args);
             FragmentTransaction transaction = getSupportFragmentManager()
