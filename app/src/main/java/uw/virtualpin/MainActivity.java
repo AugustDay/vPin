@@ -15,18 +15,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-
-import uw.virtualpin.message.MessageContent;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MessageFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, PinListFragment.OnListFragmentInteractionListener {
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> master
+    private Location mCurrentLocation;
+    private LocationManager locationManager;
     UserLocalStore userLocalStore;
 
     String username;
@@ -44,15 +40,23 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.setDrawerListener(toggle);
-            toggle.syncState();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-<<<<<<< HEAD
-        userLocalStore = new UserLocalStore(this);
+
+   /*     getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new PinListFragment()).commit();
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new PinListFragment()).commit();*/
+
         setFragment("Inbox");
+
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras == null) {
@@ -92,8 +96,9 @@ public class MainActivity extends AppCompatActivity
             } else {
                 username = (String) savedInstanceState.getSerializable("USERNAME");
             }
->>>>>>> master
+
     }
+
     /**
      *
      */
