@@ -24,6 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:screenOrientation="portrait"
             android:name=".LoginActivity"
             android:label="vPin"
             android:theme="@style/AppTheme">
@@ -35,6 +36,7 @@
         </activity>
 
     <activity
+        android:screenOrientation="portrait"
         android:name=".MainActivity"
         android:label="Inbox"
         android:theme="@style/AppTheme.NoActionBar">
@@ -45,6 +47,7 @@
     </activity>
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".RegisterActivity"
             android:label="vPin"
             android:theme="@style/AppTheme">
@@ -59,7 +62,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD8Bp-cZUFwn4-MhgQ6cvkKs6hAMaCdtds" />
 
-        <activity android:name=".ProfilePage"></activity>
+        <activity android:name=".ProfilePage"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
