@@ -156,7 +156,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_inbox) {
-            setFragment("Inbox");
+            Intent intent = new Intent(this, this.getClass());
+            intent.putExtra("USERNAME", username);
+            startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_profile) {
             Intent intent = new Intent(this, ProfilePage.class);
