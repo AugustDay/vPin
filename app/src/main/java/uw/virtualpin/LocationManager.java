@@ -16,32 +16,40 @@ import com.google.android.gms.location.LocationServices;
 
 import static android.support.v4.app.ActivityCompat.requestPermissions;
 
-/**
- * Created by tyler on 11/29/2016.
+/*
+
+Author: Tyler Brent
+
+This class handles everything needed for locations in the app.
+
  */
 
 
 //Note: make sure to call stopLocationManager() in onPause() for any activity or fragment that uses it.
 public class LocationManager implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient mGoogleApiClientGeo;
     private Activity activity;
     private LocationListener locationListener;
-    private Location mCurrentLocation;
 
+    /**
+     * Overloaded constructor to initialize variables.
+     *
+     * @param activity the activity this manager is being attached to.
+     * @param locationListener the location listener being attached to this manager.
+     */
     public LocationManager(Activity activity, LocationListener locationListener) {
         this.locationListener = locationListener;
         this.activity = activity;
         setupGoogleMapClient();
     }
 
-    public LocationManager(Activity activity) {
-        this.locationListener = this;
-        this.activity = activity;
-        setupGoogleMapClient();
-    }
-
+    /**
+     * Gets the location of the user.
+     *
+     * @return the location of the user.
+     */
     public Location getLocation() {
 
         if (ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -56,6 +64,11 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks,
         return location;
     }
 
+    /**
+     * This method gets the required permissions from the user when the location manager is connected.
+     *
+     * @param bundle the bundle.
+     */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(activity, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -73,20 +86,36 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks,
                 (mGoogleApiClientGeo, mLocationRequest, locationListener);
     }
 
+    /**
+     * This method stops the location manager.
+     */
     public void stopLocationManager() {
         mGoogleApiClientGeo.disconnect();
     }
 
+    /**
+     * This method disconnects the location manager when the connection is suspended.
+     *
+     * @param i connection status.
+     */
     @Override
     public void onConnectionSuspended(int i) {
         LocationServices.FusedLocationApi.flushLocations(mGoogleApiClientGeo);
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClientGeo, locationListener);
     }
 
+    /**
+     * Required and intentionally left blank, does nothing.
+     *
+     * @param connectionResult result of the connection.
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
+    /**
+     * Asks the user for location permissions.
+     */
     private void askLocationPermissions() {
 
         requestPermissions(activity,
@@ -99,6 +128,9 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks,
 
     }
 
+    /**
+     * Initializes the google api client so that the location manager can get the user location.
+     */
     private void setupGoogleMapClient() {
 
         mGoogleApiClientGeo = new GoogleApiClient.Builder(activity)
@@ -108,15 +140,5 @@ public class LocationManager implements GoogleApiClient.ConnectionCallbacks,
                 .build();
 
         mGoogleApiClientGeo.connect();
-    }
-
-    public Location getCurentLocation()
-    {
-        return mCurrentLocation;
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        mCurrentLocation = location;
     }
 }
