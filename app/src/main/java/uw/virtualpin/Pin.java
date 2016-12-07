@@ -3,13 +3,14 @@ package uw.virtualpin;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.net.URLEncoder;
 
 /**
  * Created by Tyler on 11/19/2016.
  */
 
-public class Pin {
+public class Pin implements Serializable {
 
     public final static String PIN_URL =
             "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=new_pin";
