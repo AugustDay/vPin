@@ -175,6 +175,8 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         textCoordinates.setText(textLocation);
     }
 
+
+    ///////////////////CODE FOR SELECTING IMAGE
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
@@ -292,7 +294,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                 try {
                     URL urlObject = new URL(url);
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
-
+                    //////////////////
                     if(pin.getEncodedImage() != "NO_IMAGE") {
 
                         urlConnection.setDoOutput(true);
@@ -303,7 +305,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                         wr.write(data);
                         wr.flush();
                     }
-
+                    //////////////////
                     InputStream content = urlConnection.getInputStream();
 
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
