@@ -23,6 +23,11 @@ import com.google.android.gms.location.LocationServices;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, PinListFragment.OnListFragmentInteractionListener {
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> bada2
 
 
     //EditText etUserName, etPassword, etFirstName, etLastName, etEmail;
@@ -43,6 +48,22 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+<<<<<<< HEAD
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        userLocalStore = new UserLocalStore(this);
+
+
+        setFragment("Inbox");
+=======
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -54,6 +75,7 @@ public class MainActivity extends AppCompatActivity
 
         setFragment("Inbox");
         userLocalStore = new UserLocalStore(this);
+>>>>>>> bada2
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -61,6 +83,10 @@ public class MainActivity extends AppCompatActivity
                 username = null;
             } else {
                 username = extras.getString("USERNAME");
+<<<<<<< HEAD
+                userLocalStore.getLoggedinUser();
+=======
+>>>>>>> bada2
             }
         } else {
             username = (String) savedInstanceState.getSerializable("USERNAME");
