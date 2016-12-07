@@ -7,14 +7,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
-
 
 import uw.virtualpin.message.MessageContent;
 
@@ -152,6 +148,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_profile) {
             Intent intent = new Intent(this, ProfilePage.class);
+            intent.putExtra("USERNAME", username);
             startActivity(intent);
 
         } else if (id == R.id.nav_history) {
