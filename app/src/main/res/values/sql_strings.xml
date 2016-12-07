@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="CREATE_PIN_SQL">
+        CREATE TABLE IF NOT EXISTS Pin
+        (id INTEGER PRIMARY KEY, creator TEXT, latitude DOUBLE,
+        longitude DOUBLE, message TEXT, encodedImage TEXT)
+    </string>
+
+    <string name="DROP_PIN_SQL">
+        DROP TABLE IF EXISTS Pin
+    </string>
+
+</resources>

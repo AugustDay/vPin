@@ -47,3 +47,12 @@ Thumbs.db
 
 # OSX files
 .DS_Store
+.idea/libraries/support_fragment_24_2_1.xml
+
+.idea/libraries/mediarouter_v7_23_0_0.xml
+
+.idea/libraries/support_core_ui_24_2_1.xml
+
+.idea/libraries/support_core_utils_24_2_1.xml
+
+.idea/libraries/support_fragment_24_2_1.xml
