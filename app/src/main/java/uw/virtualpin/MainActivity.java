@@ -24,18 +24,11 @@ import com.google.android.gms.location.LocationServices;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, PinListFragment.OnListFragmentInteractionListener {
 
-
-
-
-<<<<<<< HEAD
-    String username;
     private Location mCurrentLocation;
     private LocationManager locationManager;
-=======
     UserLocalStore userLocalStore;
 
     String username;
->>>>>>> master
 
     /**
      *
@@ -49,18 +42,12 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-<<<<<<< HEAD
         userLocalStore = new UserLocalStore(this);
 
         locationManager = new LocationManager(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-=======
-
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
->>>>>>> master
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -77,14 +64,13 @@ public class MainActivity extends AppCompatActivity
 
         setFragment("Inbox");
 
-<<<<<<< HEAD
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if (extras == null) {
                 username = null;
-=======
+
             getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new MessageFragment()).commit();
+                        .replace(R.id.fragment_container, new PinListFragment()Fragment()).commit();
 
             userLocalStore = new UserLocalStore(this);
 
@@ -97,20 +83,16 @@ public class MainActivity extends AppCompatActivity
                     userLocalStore.getLoggedinUser();
 
                 }
->>>>>>> master
             } else {
                 username = extras.getString("USERNAME");
             }
-<<<<<<< HEAD
         } else {
             username = (String) savedInstanceState.getSerializable("USERNAME");
         }
 
     }
 
-=======
     }
->>>>>>> master
     /**
      *
      */
