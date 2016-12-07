@@ -1,25 +1,28 @@
 package uw.virtualpin;
 
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import uw.virtualpin.pin.Pin;
+import com.google.android.gms.maps.LocationSource;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PinDetailFragment extends Fragment {
+public class PinDetailFragment extends Fragment implements LocationSource.OnLocationChangedListener {
     private TextView mPinIdTextView;
     private TextView mPinCreatorView;
     private TextView mPinLatitudeView;
     private TextView mPinLongitudeTextView;
     private TextView mPinMessageTextView;
+    private ImageView mPinImageView;
     public final static String PIN_ITEM_SELECTED = "pin_selected";
 
     public PinDetailFragment() {
@@ -33,12 +36,12 @@ public class PinDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_pin_detail, container, false);
 
-        mPinIdTextView = (TextView) view.findViewById(R.id.pin_id);;
-        mPinCreatorView = (TextView) view.findViewById(R.id.pin_creator);
+        //mPinIdTextView = (TextView) view.findViewById(R.id.pin_id);;
+        mPinCreatorView = (TextView) view.findViewById(R.id.pin_username);
         mPinLatitudeView = (TextView) view.findViewById(R.id.pin_latitude);
         mPinLongitudeTextView = (TextView) view.findViewById(R.id.pin_longitude);
         mPinMessageTextView = (TextView) view.findViewById(R.id.pin_message);
-
+        mPinImageView = (ImageView) view.findViewById(R.id.pin_image);
         return view;
     }
 
@@ -57,13 +60,27 @@ public class PinDetailFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+    }
+
     public void updateView(Pin pin) {
         if (pin != null) {
-            mPinIdTextView.setText(String.valueOf(pin.getPinId()));
-            mPinCreatorView.setText(pin.getCreator());
+            //mPinIdTextView.setText(String.valueOf(pin.getId()));
+            mPinCreatorView.setText(pin.getUserName());
             mPinLatitudeView.setText(String.valueOf(pin.getLatitude()));
             mPinLongitudeTextView.setText(String.valueOf(pin.getLongitude()));
             mPinMessageTextView.setText(pin.getMessage());
+
+            ImageManager manager = new ImageManager();
+            mPinImageView.setImageBitmap(manager.convertEncodedImageToBitmap(pin.getEncodedImage()));
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
     }
 }

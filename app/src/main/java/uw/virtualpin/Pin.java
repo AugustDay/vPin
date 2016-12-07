@@ -3,13 +3,19 @@ package uw.virtualpin;
 import android.view.View;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
 import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * Created by Tyler on 11/19/2016.
  */
 
-public class Pin {
+public class Pin implements Serializable {
 
     public final static String PIN_URL =
             "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=new_pin";
@@ -20,6 +26,9 @@ public class Pin {
     private double longitude;
     private String encodedImage;
     private String dateTime;
+
+    public static final String ID = "id", USER_NAME = "userName"
+            , LATITUDE= "latitude", LONGITUDE = "longitude", ENCODED_IMAGE="encodedImage", MESSAGE = "message";
 
     public Pin(String userName, double latitude, double longitude, String message, String encodedImage) {
         this.message = message;

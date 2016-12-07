@@ -1,18 +1,27 @@
 package uw.virtualpin;
 
 import android.content.Context;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageButton;
+
+import com.google.android.gms.location.LocationListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -23,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import uw.virtualpin.data.PinDB;
-import uw.virtualpin.pin.Pin;
 
 /**
  * A fragment representing a list of Items.
@@ -31,7 +39,7 @@ import uw.virtualpin.pin.Pin;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class PinListFragment extends Fragment {
+public class PinListFragment extends Fragment implements LocationListener{
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -40,21 +48,34 @@ public class PinListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private List<Pin> mPinList;
     private OnListFragmentInteractionListener mListener;
+    LocationManager locationManager;
+    double mLatitude;
+    double mLongitude;
+    ConnectivityManager connMgr;
+    public final static String CURRENT_LATITUDE = "current_latitude";
+    public final static String CURRENT_LONGITUDE = "current_longitude";
 
-    private static final String COURSE_URL
-            = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=select*pins";
+    private static final String BASE_URL
+            = "http://cssgate.insttech.washington.edu/~_450team8/info.php?";
+    private static String cmdUrl;
     private PinDB mPinDB;
     private Pin mFirstPin;
+    private Location mLocation;
+    MyPinRecyclerViewAdapter adapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public PinListFragment() {
+        mLatitude = 0.0;
+        mLongitude = 0.0;
+
+
     }
 
     /**
-     * Creates a new instance of the MessageFragment
+     * Creates a new instance of the PinListFragment
      * @param columnCount
      * @return MessageFragment
      */
@@ -77,6 +98,25 @@ public class PinListFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        locationManager = new LocationManager(getActivity(), this);
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        // get current location form MainActivity
+        /*Bundle args = getArguments();
+        if (args != null) {
+            mLatitude = args.getDouble(PinListFragment.CURRENT_LATITUDE);
+            mLongitude = args.getDouble(PinListFragment.CURRENT_LONGITUDE);
+        }*/
+        
+        mLocation = locationManager.getLocation();
+
+        //getPins();
     }
 
     /**
@@ -100,20 +140,32 @@ public class PinListFragment extends Fragment {
             } else {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            //recyclerView.setAdapter(new MyMessageRecyclerViewAdapter(Pin.ITEMS, mListener));
+
         }
 
-        ConnectivityManager connMgr = (ConnectivityManager)
+        Context context = view.getContext();
+
+        connMgr = (ConnectivityManager)
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        getPins();
+
+        return view;
+    }
+
+    private void getPins()
+    {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
+        if (networkInfo != null && networkInfo.isConnected() && mLocation != null) {
+            cmdUrl = BASE_URL + "cmd=nearby_pins&latitude=" + mLocation.getLatitude() +
+                    "&longitude=" + mLocation.getLongitude();
             DownloadCoursesTask task = new DownloadCoursesTask();
-            task.execute(new String[]{COURSE_URL});
+            task.execute(cmdUrl);
         }
         else {
-            Toast.makeText(view.getContext(),
+            /*Toast.makeText(view.getContext(),
                     "No network connection available. Displaying locally stored data",
-                    Toast.LENGTH_SHORT) .show();
+                    Toast.LENGTH_SHORT).show();*/
 
             if (mPinDB == null) {
                 mPinDB = new PinDB(getActivity());
@@ -121,34 +173,56 @@ public class PinListFragment extends Fragment {
             if (mPinList == null) {
                 mPinList = mPinDB.getPins();
             }
-            mRecyclerView.setAdapter(new MyPinRecyclerViewAdapter(mPinList, mListener));
 
+            adapter = new MyPinRecyclerViewAdapter(mPinList, mListener);
+            adapter.notifyDataSetChanged();
+
+            mRecyclerView.setAdapter(adapter);
+        }
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        locationManager.stopLocationManager();
+    }
+
+    public void parseJSON(String jsonString, int attempt) {
+
+        try {
+            JSONArray jsonArray = new JSONArray(jsonString);
+            for (int index = 0; index < jsonArray.length(); index++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(index);
+
+                Pin pin = new Pin(jsonObject.getString("creator")
+                        ,Double.parseDouble(jsonObject.getString("latitude"))
+                        ,Double.parseDouble(jsonObject.getString("longitude"))
+                        ,jsonObject.getString("message")
+                        ,null);
+
+                pin.setId(jsonObject.getString("pinID"));
+
+                mPinList.add(pin);
+            }
+        } catch (JSONException e) {
+            if(attempt >= 2) {
+
+                Snackbar.make(getView(), "Error, please reload this page.", Snackbar.LENGTH_LONG);
+                return;
+            } else {
+                attempt++;
+                parseJSON(jsonString, attempt);
+            }
         }
 
-        //Read from file and show the text
-/*        try {
-            InputStream inputStream = getActivity().openFileInput(
-                    getString(R.string.LOGIN_FILE));
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ((receiveString = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(receiveString);
-                }
-
-                inputStream.close();
-                Toast.makeText(getActivity(), stringBuilder.toString(), Toast.LENGTH_SHORT)
-                        .show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
-
-        return view;
+        //setupListView(postsList, getMessages());
     }
 
     /**
@@ -173,6 +247,13 @@ public class PinListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.e("LOC", location.toString());
+        this.mLocation = location;
+        getPins();
     }
 
     /**
@@ -249,19 +330,19 @@ public class PinListFragment extends Fragment {
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.
             if (result.startsWith("Unable to")) {
-                Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG)
-                        .show();
+                //Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG)
+                        //.show();
                 return;
             }
 
             mPinList = new ArrayList<Pin>();
-            result = Pin.parseCourseJSON(result, mPinList);
-            // Something wrong with the JSON returned.
+            parseJSON(result, 1);
+            /*// Something wrong with the JSON returned.
             if (result != null) {
                 Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;
-            }
+            }*/
 
             // Everything is good, show the list of courses.
             if (!mPinList.isEmpty()) {
@@ -277,11 +358,12 @@ public class PinListFragment extends Fragment {
                 // Also, add to the local database
                 for (int i=0; i<mPinList.size(); i++) {
                     Pin pin = mPinList.get(i);
-                    mPinDB.insertCourse(pin.getPinId(),
-                            pin.getCreator(),
+                    mPinDB.insertCourse(pin.getId(),
+                            pin.getUserName(),
                             pin.getLatitude(),
                             pin.getLongitude(),
-                            pin.getMessage());
+                            pin.getMessage(),
+                            pin.getEncodedImage());
                 }
 
 

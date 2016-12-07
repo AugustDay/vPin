@@ -9,8 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import uw.virtualpin.Pin;
 import uw.virtualpin.R;
-import uw.virtualpin.pin.Pin;
 
 /**
  * Created by opeoluwabada on 11/27/16.
@@ -24,7 +24,7 @@ public class PinDB {
     private SQLiteDatabase mSQLiteDatabase;
 
     private PinDB mPinDB;
-    private List<Pin> mCourseList;
+    private List<Pin> mPinList;
 
     private static final String PIN_TABLE = "Pin";
 
@@ -40,7 +40,7 @@ public class PinDB {
     public List<Pin> getPins() {
 
         String[] columns = {
-                "id", "creator", "latitude", "longitude", "message"
+                "id", "creator", "latitude", "longitude", "message", "encodedImage"
         };
 
         Cursor c = mSQLiteDatabase.query(
@@ -52,17 +52,20 @@ public class PinDB {
                 null,                                     // don't filter by row groups
                 null                                 // The sort order
         );
+
         c.moveToFirst();
         List<Pin> list = new ArrayList<Pin>();
         for (int i=0; i<c.getCount(); i++) {
-            int id = c.getInt(0);
+            String id = c.getString(0);
             String creator = c.getString(1);
             double latitude = c.getDouble(2);
             double longitude = c.getDouble(3);
             String message = c.getString(4);
+            String encodedImage = c.getString(5);
 
-            Pin course = new Pin(id, creator, latitude, longitude, message);
-            list.add(course);
+            Pin pin = new Pin(creator, latitude, longitude, message, encodedImage);
+            pin.setId(id);
+            list.add(pin);
             c.moveToNext();
         }
 
@@ -77,22 +80,24 @@ public class PinDB {
      * @param latitude
      * @param longitude
      * @param message
+     * @param encodedImage
      * @return true or false
      */
-    public boolean insertCourse(int id, String creator, double latitude, double longitude, String message) {
+    public boolean insertCourse(String id, String creator, double latitude, double longitude, String message, String encodedImage) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("id", id);
         contentValues.put("creator", creator);
         contentValues.put("latitude", latitude);
         contentValues.put("longitude", longitude);
         contentValues.put("message", message);
+        contentValues.put("encodedImage", encodedImage);
 
         long rowId = mSQLiteDatabase.insert("Pin", null, contentValues);
         return rowId != -1;
     }
 
     /**
-     * Delete all the data from the COURSE_TABLE
+     * Delete all the data from the PIN_TABLE
      */
     public void deletePins() {
         mSQLiteDatabase.delete(PIN_TABLE, null, null);
@@ -112,7 +117,7 @@ public class PinDB {
         public PinDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
             super(context, name, factory, version);
             CREATE_PIN_SQL = context.getString(R.string.CREATE_PIN_SQL);
-            DROP_PIN_SQL = context.getString(R.string.DROP_PIN_SQL);
+            DROP_PIN_SQL = context.getString(R.string.drop_pin);
 
         }
         @Override
