@@ -100,6 +100,13 @@ public class ProfilePage extends AppCompatActivity {
         getAvatarAsyncTask.execute(GET_AVATAR_URL + username);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("USERNAME", username);
+        startActivity(intent);
+    }
+
     /**
      * Opens the phone gallery.
      */

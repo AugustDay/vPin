@@ -162,9 +162,11 @@ public class MainActivity extends AppCompatActivity
             finish();
 
         } else if (id == R.id.nav_profile) {
+            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).commit();
             Intent intent = new Intent(this, ProfilePage.class);
             intent.putExtra("USERNAME", username);
             startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_history) {
             getSupportFragmentManager().beginTransaction()
