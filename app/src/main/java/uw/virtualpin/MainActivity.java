@@ -1,8 +1,11 @@
 package uw.virtualpin;
 
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,11 +18,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-
-import uw.virtualpin.message.MessageContent;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MessageFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, PinListFragment.OnListFragmentInteractionListener {
 
 
 
@@ -41,39 +44,34 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            drawer.setDrawerListener(toggle);
-            toggle.syncState();
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-            navigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        userLocalStore = new UserLocalStore(this);
 
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new MessageFragment()).commit();
+        setFragment("Inbox");
 
-        //userLocalStore = new UserLocalStore(this);
-
-            getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new MessageFragment()).commit();
-
-            userLocalStore = new UserLocalStore(this);
-
-            if (savedInstanceState == null) {
-                Bundle extras = getIntent().getExtras();
-                if (extras == null) {
-                    username = null;
-                } else {
-                    username = extras.getString("USERNAME");
-                    userLocalStore.getLoggedinUser();
-
-                }
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras == null) {
+                username = null;
             } else {
-                username = (String) savedInstanceState.getSerializable("USERNAME");
+                username = extras.getString("USERNAME");
+                userLocalStore.getLoggedinUser();
             }
+        } else {
+            username = (String) savedInstanceState.getSerializable("USERNAME");
+        }
+
     }
+
     /**
      *
      */
@@ -181,13 +179,8 @@ public class MainActivity extends AppCompatActivity
     private void setFragment(String title)
     {
         if (title == "Inbox") {
-            /*getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new PinListFragment()).commit();*/
-
             PinListFragment pinListFragment = new PinListFragment();
             Bundle args = new Bundle();
-            //args.putDouble(PinListFragment.CURRENT_LATITUDE, locationManager.getCurentLocation().getLatitude());
-            //args.putDouble(PinListFragment.CURRENT_LONGITUDE, locationManager.getCurentLocation().getLongitude());
 
             pinListFragment.setArguments(args);
             FragmentTransaction transaction = getSupportFragmentManager()
@@ -209,7 +202,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(MessageContent.MessageItem item) {
+    public void onListFragmentInteraction(Pin item) {
 
         PinDetailFragment pinDetailFragment = new PinDetailFragment();
         Bundle args = new Bundle();
@@ -223,4 +216,5 @@ public class MainActivity extends AppCompatActivity
         // Commit the transaction
         transaction.commit();
     }
+
 }
