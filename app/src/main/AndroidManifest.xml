@@ -52,7 +52,7 @@
             android:screenOrientation="portrait"
             android:name=".RegisterActivity"
             android:label="Register"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
