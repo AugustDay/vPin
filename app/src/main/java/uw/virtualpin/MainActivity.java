@@ -3,7 +3,6 @@ package uw.virtualpin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,12 +15,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
+
+import uw.virtualpin.message.MessageContent;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, PinListFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MessageFragment.OnListFragmentInteractionListener {
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> master
     UserLocalStore userLocalStore;
 
     String username;
@@ -42,12 +47,10 @@ public class MainActivity extends AppCompatActivity
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
+<<<<<<< HEAD
         userLocalStore = new UserLocalStore(this);
         setFragment("Inbox");
         if (savedInstanceState == null) {
@@ -62,6 +65,34 @@ public class MainActivity extends AppCompatActivity
             } else {
             username = (String) savedInstanceState.getSerializable("USERNAME");
         }
+=======
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
+
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new MessageFragment()).commit();
+
+        //userLocalStore = new UserLocalStore(this);
+
+            getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new MessageFragment()).commit();
+
+            userLocalStore = new UserLocalStore(this);
+
+            if (savedInstanceState == null) {
+                Bundle extras = getIntent().getExtras();
+                if (extras == null) {
+                    username = null;
+                } else {
+                    username = extras.getString("USERNAME");
+                    userLocalStore.getLoggedinUser();
+
+                }
+            } else {
+                username = (String) savedInstanceState.getSerializable("USERNAME");
+            }
+>>>>>>> master
     }
     /**
      *
@@ -194,7 +225,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Pin item) {
+    public void onListFragmentInteraction(MessageContent.MessageItem item) {
 
         PinDetailFragment pinDetailFragment = new PinDetailFragment();
         Bundle args = new Bundle();
