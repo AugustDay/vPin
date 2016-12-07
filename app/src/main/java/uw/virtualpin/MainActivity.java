@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import uw.virtualpin.message.MessageContent;
@@ -101,6 +102,17 @@ public class MainActivity extends AppCompatActivity
         TextView textView = (TextView) findViewById(R.id.menuUsernameText);
         textView.setText(username.toUpperCase());
         textView.setTextSize(14);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ProfilePage.class);
+                intent.putExtra("USERNAME", username);
+                startActivity(intent);
+            }
+        });
+
         return true;
     }
 
