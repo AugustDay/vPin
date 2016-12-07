@@ -24,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -58,7 +57,6 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
 
     private EditText messageText;
     private GoogleMap mMap;
-    private GoogleApiClient mGoogleApiClientGeo;
     private static final int PICK_IMAGE = 100;
     private Uri imageUri;
     private ImageView imageView;
@@ -74,6 +72,15 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         // Required empty public constructor
     }
 
+    /**
+     *
+     * Overridden onCreateView initializes all the required variables for Drop Pin.
+     *
+     * @param inflater inflater for the fragment
+     * @param container view container for the fragment
+     * @param savedInstanceState saved state of the fragment
+     * @return the view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -114,6 +121,11 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         return view;
     }
 
+    /**
+     * Overridden onStart initializes the Google Map fragment and the Location manager.
+     * The LocationManager is a helper class designed to manage all things needed
+     * to obtain location.
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -124,12 +136,21 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         mapFragment.getMapAsync(this);
     }
 
+    /**
+     * Overridden onPause stops the location manager when it this fragment
+     * is put on pause.
+     */
     @Override
     public void onPause() {
         super.onPause();
         locationManager.stopLocationManager();
     }
 
+    /**
+     * Overridden onMapReady sets the current map.
+     *
+     * @param googleMap the google map fragment.
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -137,6 +158,12 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
 
     }
 
+    /**
+     * Gives a visible representation of where the user is on the map
+     * by zooming to the location and dropping a pin.
+     *
+     * @param location the location of the user.
+     */
     private void setMapLocation(Location location) {
         if (location == null) {
             textGps.setText("Error loading location...");
@@ -161,25 +188,45 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         updateTextView(lat, lng);
     }
 
+    /**
+     * Updates the users location when they move.
+     *
+     * @param location the current location of the user.
+     */
     @Override
     public void onLocationChanged(Location location) {
         Log.e("Location Changed: ", location.toString());
         setMapLocation(location);
     }
 
+    /**
+     * Updates the text view that gives a visible representation of the users
+     * coordinates.
+     *
+     * @param lat the latitude position of the user.
+     * @param lng the longitude position of the user.
+     */
     private void updateTextView(double lat, double lng) {
         String textLocation = "Location: (" + lat + ", " + lng + ")";
         final TextView textCoordinates = (TextView) getActivity().findViewById(R.id.gps_location_text);
         textCoordinates.setText(textLocation);
     }
 
-
-    ///////////////////CODE FOR SELECTING IMAGE
+    /**
+     * Opens the image gallery on the users device so they may select an image.
+     */
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
     }
 
+    /**
+     * On the resolution of opening the image gallery, this sets the imageView to the image chosen.
+     *
+     * @param requestCode the request code.
+     * @param resultCode the result code.
+     * @param data the data.
+     */
     @Override
     public void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -189,6 +236,12 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         }
     }
 
+    /**
+     * This method sets up the button for when a user presses the drop pin button.
+     * It resets the image and the message and calls the async task to upload the information.
+     *
+     * @param view the current view.
+     */
     private void setupDropPinButton(View view) {
         final Button pinButton = (Button) view.findViewById(R.id.postButton);
         pinButton.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +265,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                                 , imageString);
 
                         DropPinAsyncTask task = new DropPinAsyncTask();
-                        task.execute(pin.buildCourseURL(view));
+                        task.execute(pin.buildPinURL(view));
                         messageText.setText("");
                         imageView.setImageResource(0);
                         closeSoftKeyboard();
@@ -225,6 +278,12 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         });
     }
 
+    /**
+     * Sets up the edit text to either collapse or show the other information on the screen.
+     * This allows the user to see what they are typing by clearing the screen of clutter.
+     *
+     * @param view the current view.
+     */
     private void setupEditTextShowHide(View view) {
         show_text.setVisibility(View.GONE);
 
@@ -254,6 +313,11 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         });
     }
 
+    /**
+     * Sets views is what toggles the information on the screen as visible or not.
+     *
+     * @param on a flag for whether the information is being turned on or off.
+     */
     private void setViews(Boolean on) {
         if(on) {
             FragmentManager fm = getFragmentManager();
@@ -270,6 +334,9 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         }
     }
 
+    /**
+     * Closes the soft keyboard
+     */
     private void closeSoftKeyboard() {
         View view = getActivity().getCurrentFocus();
         if (view != null) {
@@ -279,6 +346,9 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
         }
     }
 
+    /**
+     * The async task that communicates to the web service to upload the pin data to the server.
+     */
     private class DropPinAsyncTask extends AsyncTask<String, Integer, String> {
         Snackbar snackbar;
 
@@ -292,7 +362,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                 try {
                     URL urlObject = new URL(url);
                     urlConnection = (HttpURLConnection) urlObject.openConnection();
-                    //////////////////
+
                     if(pin.getEncodedImage() != "NO_IMAGE") {
 
                         urlConnection.setDoOutput(true);
@@ -303,7 +373,7 @@ public class DropPinFragment extends Fragment implements OnMapReadyCallback, Loc
                         wr.write(data);
                         wr.flush();
                     }
-                    //////////////////
+
                     InputStream content = urlConnection.getInputStream();
 
                     BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
