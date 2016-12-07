@@ -1,9 +1,14 @@
 package uw.virtualpin;
 
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +17,21 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.LocationSource;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PinDetailFragment extends Fragment implements LocationSource.OnLocationChangedListener {
+    private static final String GET_URL = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=get_pin&id=";
     private TextView mPinIdTextView;
     private TextView mPinCreatorView;
     private TextView mPinLatitudeView;
@@ -74,13 +89,62 @@ public class PinDetailFragment extends Fragment implements LocationSource.OnLoca
             mPinLongitudeTextView.setText(String.valueOf(pin.getLongitude()));
             mPinMessageTextView.setText(pin.getMessage());
 
-            ImageManager manager = new ImageManager();
-            mPinImageView.setImageBitmap(manager.convertEncodedImageToBitmap(pin.getEncodedImage()));
+            GetImageAsyncTask getImageAsyncTask = new GetImageAsyncTask();
+            getImageAsyncTask.execute(GET_URL + pin.getId());
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
 
+    }
+
+    /**
+     * The async task to get the pin details from the web service.
+     */
+    private class GetImageAsyncTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String response = "";
+            HttpURLConnection urlConnection = null;
+            for (String url : urls) {
+                try {
+                    URL urlObject = new URL(url);
+                    urlConnection = (HttpURLConnection) urlObject.openConnection();
+
+                    InputStream content = urlConnection.getInputStream();
+
+                    BufferedReader buffer = new BufferedReader(new InputStreamReader(content));
+                    String s = "";
+                    while ((s = buffer.readLine()) != null) {
+                        response += s;
+                    }
+
+                } catch (Exception e) {
+                    response = "Unable to complete your request, Reason: "
+                            + e.getMessage();
+                }
+                finally {
+                    if (urlConnection != null)
+                        urlConnection.disconnect();
+                }
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(result);
+                ImageManager imageManager = new ImageManager();
+                Bitmap image = imageManager.convertEncodedImageToBitmap(jsonObject.getString("image"));
+                mPinImageView.setImageBitmap(image);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

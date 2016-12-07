@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ffebeff1"
     android:divider="@drawable/divider"
     android:showDividers="middle"
     android:layout_margin="0dp"
@@ -71,12 +70,6 @@
         android:background="#ffebeff1"
         android:orientation="horizontal" >
 
-<!--        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:text="Location"/>-->
-
         <TextView
             android:id="@+id/pin_message"
             android:layout_width="wrap_content"
@@ -94,6 +87,6 @@
 
     <ImageView
         android:id="@+id/pin_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="300dp"
+        android:layout_height="300dp" />
 </LinearLayout>

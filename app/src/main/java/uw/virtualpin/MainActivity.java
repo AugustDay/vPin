@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).commit();
         if (id == R.id.nav_inbox) {
             Intent intent = new Intent(this, this.getClass());
             intent.putExtra("USERNAME", username);
@@ -166,13 +166,13 @@ public class MainActivity extends AppCompatActivity
             finish();
 
         } else if (id == R.id.nav_profile) {
-            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).commit();
             Intent intent = new Intent(this, ProfilePage.class);
             intent.putExtra("USERNAME", username);
             startActivity(intent);
             finish();
 
         } else if (id == R.id.nav_history) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new PinListFragment()).commit();
 

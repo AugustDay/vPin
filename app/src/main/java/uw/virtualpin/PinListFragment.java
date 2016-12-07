@@ -54,6 +54,7 @@ public class PinListFragment extends Fragment implements LocationListener{
     ConnectivityManager connMgr;
     public final static String CURRENT_LATITUDE = "current_latitude";
     public final static String CURRENT_LONGITUDE = "current_longitude";
+    private DownloadCoursesTask task;
 
     private static final String BASE_URL
             = "http://cssgate.insttech.washington.edu/~_450team8/info.php?";
@@ -99,6 +100,7 @@ public class PinListFragment extends Fragment implements LocationListener{
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
 
+        task = new DownloadCoursesTask() ;
         locationManager = new LocationManager(getActivity(), this);
     }
 
@@ -159,7 +161,7 @@ public class PinListFragment extends Fragment implements LocationListener{
         if (networkInfo != null && networkInfo.isConnected() && mLocation != null) {
             cmdUrl = BASE_URL + "cmd=nearby_pins&latitude=" + mLocation.getLatitude() +
                     "&longitude=" + mLocation.getLongitude();
-            DownloadCoursesTask task = new DownloadCoursesTask();
+            task = new DownloadCoursesTask();
             task.execute(cmdUrl);
         }
         else {
@@ -253,7 +255,6 @@ public class PinListFragment extends Fragment implements LocationListener{
     public void onLocationChanged(Location location) {
         Log.e("LOC", location.toString());
         this.mLocation = location;
-        getPins();
     }
 
     /**
