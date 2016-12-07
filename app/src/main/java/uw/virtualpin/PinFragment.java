@@ -26,10 +26,20 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+/*
 
-/**
- * A simple {@link Fragment} subclass.
+Author: Tyler Brent
+
+This class represents the pin object after an item is clicked in the PostHistory list.
+It is the expanded view of that pin. Here you can update any messsages you've left in the pin.
+You cannot update the image, although that was a feature we tried to implement but ran out of time
+due to a bug with the design.
+
+Note: below is some commented out code that will be used to update the pin image. It is left intenionally
+from a previous attempt.
+
  */
+
 public class PinFragment extends Fragment {
 
     private static final String UPDATE_URL = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=update_pin&id=";
@@ -48,11 +58,23 @@ public class PinFragment extends Fragment {
     boolean filled;
 
 
+    /**
+     * Public contructor to initialize variables.
+     */
     public PinFragment() {
         pinDetails = new ArrayList<>();
     }
 
 
+    /**
+     * Overloaded onCreateView is used to inialize variables. It also sets up the update message
+     * button.
+     *
+     * @param inflater the inflater for the fragment.
+     * @param container the container for the fragment.
+     * @param savedInstanceState the saved state of the fragment.
+     * @return the current view.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -103,6 +125,9 @@ public class PinFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Overloaded onStart initializes the async task to populate the pin data.
+     */
     public void onStart() {
         super.onStart();
         if(filled == false) {
@@ -112,6 +137,9 @@ public class PinFragment extends Fragment {
         }
     }
 
+    /**
+     * Sets pin details sets all the pin details to their view objects.
+     */
     private void setupPinDetails() {
         try {
             creatorText.setText("Created by: " + pinDetails.get(1));
@@ -124,6 +152,11 @@ public class PinFragment extends Fragment {
         }
     }
 
+    /**
+     * Parses the json string given by the async task.
+     *
+     * @param jsonString the json string.
+     */
     private void parseJson(String jsonString) {
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
@@ -149,6 +182,9 @@ public class PinFragment extends Fragment {
 //        }
 //    }
 
+    /**
+     * The async task to get the pin details from the web service.
+     */
     private class GetPinAsyncTask extends AsyncTask<String, Integer, String> {
 
         Snackbar snackbar;

@@ -1,11 +1,8 @@
 package uw.virtualpin;
 
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,24 +15,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
+
+import uw.virtualpin.message.MessageContent;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, PinListFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MessageFragment.OnListFragmentInteractionListener {
 
 
 
 
-<<<<<<< HEAD
-    String username;
-    private Location mCurrentLocation;
-    private LocationManager locationManager;
-=======
     UserLocalStore userLocalStore;
 
     String username;
->>>>>>> master
 
     /**
      *
@@ -49,40 +40,22 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-<<<<<<< HEAD
-        userLocalStore = new UserLocalStore(this);
-
-        locationManager = new LocationManager(this);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-=======
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
->>>>>>> master
                     this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
 
-
-   /*     getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new PinListFragment()).commit();
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new PinListFragment()).commit();*/
+                .replace(R.id.fragment_container, new MessageFragment()).commit();
 
-        setFragment("Inbox");
+        //userLocalStore = new UserLocalStore(this);
 
-<<<<<<< HEAD
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if (extras == null) {
-                username = null;
-=======
             getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new MessageFragment()).commit();
 
@@ -97,20 +70,10 @@ public class MainActivity extends AppCompatActivity
                     userLocalStore.getLoggedinUser();
 
                 }
->>>>>>> master
             } else {
-                username = extras.getString("USERNAME");
+                username = (String) savedInstanceState.getSerializable("USERNAME");
             }
-<<<<<<< HEAD
-        } else {
-            username = (String) savedInstanceState.getSerializable("USERNAME");
-        }
-
     }
-
-=======
-    }
->>>>>>> master
     /**
      *
      */
@@ -140,8 +103,8 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         TextView textView = (TextView) findViewById(R.id.menuUsernameText);
-        //textView.setText(username.toUpperCase());
-        //textView.setTextSize(14);
+        textView.setText(username.toUpperCase());
+        textView.setTextSize(14);
         return true;
     }
 
@@ -189,6 +152,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_profile) {
             Intent intent = new Intent(this, ProfilePage.class);
+            intent.putExtra("USERNAME", username);
             startActivity(intent);
 
         } else if (id == R.id.nav_history) {
@@ -244,9 +208,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     @Override
-    public void onListFragmentInteraction(Pin item) {
+    public void onListFragmentInteraction(MessageContent.MessageItem item) {
 
         PinDetailFragment pinDetailFragment = new PinDetailFragment();
         Bundle args = new Bundle();
@@ -260,5 +223,4 @@ public class MainActivity extends AppCompatActivity
         // Commit the transaction
         transaction.commit();
     }
-
 }

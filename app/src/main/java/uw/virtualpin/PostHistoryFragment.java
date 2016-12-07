@@ -24,8 +24,12 @@ import java.net.URL;
 import java.util.ArrayList;
 
 
-/**
- * A simple {@link Fragment} subclass.
+/*
+
+Author: Tyler Brent
+
+This class handles creating the list of pins that the user has posted.
+
  */
 public class PostHistoryFragment extends Fragment {
 
@@ -36,11 +40,23 @@ public class PostHistoryFragment extends Fragment {
     private PostHistoryAsyncTask task;
 
 
+    /**
+     * Public contructor that initializes variables.
+     */
     public PostHistoryFragment() {
         pins = new ArrayList<>();
     }
 
 
+    /**
+     * Overloaded onCreateView inializes variables and starts the async task to retrieve the user
+     * pin history.
+     *
+     * @param inflater the inflater for the fragment.
+     * @param container the container for the fragment.
+     * @param savedInstanceState the saved state of the fragment.
+     * @return the current view.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,6 +80,10 @@ public class PostHistoryFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Overridden onPause cancels the async task. This saves the app time and the potential for crashing
+     * if the user hits the back button before the async task is complete.
+     */
     @Override
     public void onPause() {
         super.onPause();
@@ -71,6 +91,11 @@ public class PostHistoryFragment extends Fragment {
         task.cancel(true);
     }
 
+    /**
+     * Gets all the messages from the pin history.
+     *
+     * @return a list of the messages.
+     */
     private ArrayList<String> getMessages() {
         ArrayList<String> pinMessages = new ArrayList<>();
         int messageNumber = 1;
@@ -94,6 +119,12 @@ public class PostHistoryFragment extends Fragment {
         return pinMessages;
     }
 
+    /**
+     * Sets up the list view to display all the pins that the user has posted.
+     *
+     * @param listView the listview used to display the pin data.
+     * @param stringList the list used to populate the list view.
+     */
     private void setupListView(ListView listView, ArrayList<String> stringList) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 R.layout.listview_item, stringList);
@@ -119,6 +150,13 @@ public class PostHistoryFragment extends Fragment {
         });
     }
 
+    /**
+     * Parses the JSON object returned from the async task and sets up the pin object needed.
+     * As well, all pin objects that are created are stored in a list for later use.
+     *
+     * @param jsonString the jsonString.
+     * @param attempt the number of attempts to parse.
+     */
     private void parseJSON(String jsonString, int attempt) {
 
         try {
@@ -150,7 +188,10 @@ public class PostHistoryFragment extends Fragment {
         setupListView(postsList, getMessages());
     }
 
-private class PostHistoryAsyncTask extends AsyncTask<String, Integer, String> {
+    /**
+     * The async task used to get the post history. The corresponding URL is a member variable above.
+     */
+    private class PostHistoryAsyncTask extends AsyncTask<String, Integer, String> {
 
     Snackbar snackbar;
 
