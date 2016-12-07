@@ -87,6 +87,7 @@ public class ProfilePage extends AppCompatActivity {
         usernameText.setTextSize(16);
         emailText.setTextSize(16);
         fullNameText.setTextSize(16);
+        numPostsText.setTextSize(16);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,7 +262,7 @@ public class ProfilePage extends AppCompatActivity {
         protected void onPostExecute(String result) {
             try {
                 JSONObject jsonObject = new JSONObject(result);
-                numPostsText.setText(jsonObject.getString("count"));
+                numPostsText.setText("Number of Posts: " + jsonObject.getString("count"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
