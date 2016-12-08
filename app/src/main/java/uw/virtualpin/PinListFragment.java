@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import com.google.android.gms.location.LocationListener;
 
@@ -63,6 +62,7 @@ public class PinListFragment extends Fragment implements LocationListener{
     private Pin mFirstPin;
     private Location mLocation;
     MyPinRecyclerViewAdapter adapter;
+    private boolean getPins;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -71,6 +71,7 @@ public class PinListFragment extends Fragment implements LocationListener{
     public PinListFragment() {
         mLatitude = 0.0;
         mLongitude = 0.0;
+        getPins = true;
 
 
     }
@@ -255,6 +256,7 @@ public class PinListFragment extends Fragment implements LocationListener{
     public void onLocationChanged(Location location) {
         Log.e("LOC", location.toString());
         this.mLocation = location;
+        getPins();
     }
 
     /**
