@@ -1,22 +1,20 @@
 package uw.virtualpin;
 
 import android.app.Instrumentation;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.widget.Button;
 
 import org.hamcrest.core.IsNot;
-import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
-import java.util.Random;
+import uw.virtualpin.Activities.InboxActivity;
+import uw.virtualpin.Activities.LoginActivity;
+import uw.virtualpin.Activities.RegisterActivity;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
@@ -112,7 +110,7 @@ public class SignInActivityLoginTest {
     @Test
     public void testLoginWithCorrectCredentials() {
         // register next activity that need to be monitored.
-        Instrumentation.ActivityMonitor activityMonitor = getInstrumentation().addMonitor(MainActivity.class.getName(), null, false);
+        Instrumentation.ActivityMonitor activityMonitor = getInstrumentation().addMonitor(InboxActivity.class.getName(), null, false);
 
         // Type text and then press the button.
         onView(withId(R.id.editText_username))
@@ -123,7 +121,7 @@ public class SignInActivityLoginTest {
                 .perform(click());
 
         //Watch for the timeout
-        MainActivity nextActivity = (MainActivity) getInstrumentation().waitForMonitorWithTimeout(activityMonitor, 5000);
+        InboxActivity nextActivity = (InboxActivity) getInstrumentation().waitForMonitorWithTimeout(activityMonitor, 5000);
         // next activity is opened and captured.
         assertNotNull(nextActivity);
     }

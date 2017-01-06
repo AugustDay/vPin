@@ -1,8 +1,8 @@
 package uw.virtualpin;
 
-import com.aetrion.flickr.people.User;
-
 import org.junit.Test;
+
+import uw.virtualpin.Data.Users;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;

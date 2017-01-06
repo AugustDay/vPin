@@ -1,10 +1,10 @@
 package uw.virtualpin;
 
-import android.view.View;
-
 import org.junit.Test;
 
 import java.net.URLEncoder;
+
+import uw.virtualpin.Data.Pin;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;

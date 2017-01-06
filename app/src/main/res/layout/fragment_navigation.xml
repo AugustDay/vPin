@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:layout_centerHorizontal="true"
+    tools:context="uw.virtualpin.Fragments.NavigationFragment">
+
+    <Button
+    android:text="Drop Pin"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/dropPinButton"/>
+
+    <Button
+    android:text="Pin History"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/pinHistoryButton"/>
+
+    <Button
+    android:text="Profile Page"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/profileButton"/>
+
+</LinearLayout>

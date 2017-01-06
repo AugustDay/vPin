@@ -32,4 +32,6 @@
     <string name="LOGIN_PREFS" />
     <string name="SharedPreference_currentUser" />
     <string name="update_info">Update Info</string>
+    <string name="title_activity_test">test</string>
+    <string name="title_activity_navigation_drawer_base">NavigationDrawerBase</string>
 </resources>
