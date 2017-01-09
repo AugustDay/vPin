@@ -10,7 +10,7 @@ import java.net.URLEncoder;
  * Created by Tyler on 11/19/2016.
  */
 
-public class Pin implements Serializable {
+public class Pin {
 
     public final static String PIN_URL =
             "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=new_pin";

@@ -3,25 +3,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:layout_centerHorizontal="true"
+    android:gravity="center_horizontal"
+    android:background="@color/colorPrimary"
+    android:id="@+id/navigationFragment"
     tools:context="uw.virtualpin.Fragments.NavigationFragment">
 
     <Button
-    android:text="Drop Pin"
+    android:text="Pin"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:backgroundTint="@color/colorLightBlue"
     android:id="@+id/dropPinButton"/>
 
     <Button
-    android:text="Pin History"
+    android:text="History"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/pinHistoryButton"/>
+    android:backgroundTint="@color/colorLightBlue"
+    android:id="@+id/pinHistoryButton" />
 
     <Button
-    android:text="Profile Page"
+    android:text="Favorites"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/profileButton"/>
+    android:backgroundTint="@color/colorLightBlue"
+    android:id="@+id/favoritesButton" />
+
+    <Button
+    android:text="Profile"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:backgroundTint="@color/colorLightBlue"
+    android:id="@+id/profileButton" />
 
 </LinearLayout>

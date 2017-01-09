@@ -17,7 +17,7 @@ public class NavigationFragment extends Fragment {
     public String username;
 
     public NavigationFragment() {
-        username = "";
+        username = "tylerkb2";
     }
 
     @Override
@@ -25,24 +25,24 @@ public class NavigationFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_navigation, container, false);
 
-        setupDropPinButton();
+        setupDropPinButton(view);
         setupPinHistoryButton();
         setupProfilePageButton();
 
         return view;
     }
 
-    private void setupDropPinButton() {
-        Button button = (Button) getActivity().findViewById(R.id.dropPinButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DropPinActivity.class);
-                intent.putExtra("USERNAME", username);
-                startActivity(intent);
-            }
-        });
-    }
+        private void setupDropPinButton(View view) {
+            Button button = (Button) view.findViewById(R.id.dropPinButton);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), DropPinActivity.class);
+                    intent.putExtra("USERNAME", username);
+                    startActivity(intent);
+                }
+            });
+        }
 
     private void setupPinHistoryButton() {
 

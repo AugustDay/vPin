@@ -8,6 +8,12 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
+    <fragment
+        android:name="uw.virtualpin.Fragments.NavigationFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </fragment>
+
     <TextView
         android:text="Unhide map..."
         android:layout_width="match_parent"
