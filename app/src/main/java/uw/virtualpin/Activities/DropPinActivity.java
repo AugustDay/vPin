@@ -29,6 +29,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import uw.virtualpin.Data.CurrentUser;
 import uw.virtualpin.Data.Pin;
 import uw.virtualpin.HelperClasses.AsyncManager;
 import uw.virtualpin.HelperClasses.ImageManager;
@@ -87,16 +88,8 @@ public class DropPinActivity extends AppCompatActivity implements OnMapReadyCall
         setupDropPinButton(findViewById(android.R.id.content));
         setupEditTextShowHide(findViewById(android.R.id.content));
 
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if (extras == null) {
-                username = null;
-            } else {
-                username = extras.getString("USERNAME");
-            }
-        } else {
-            username = (String) savedInstanceState.getSerializable("USERNAME");
-        }
+        CurrentUser currentUser = new CurrentUser();
+        username = currentUser.username;
 
         uploadImageButton.setOnClickListener(new View.OnClickListener() {
             @Override

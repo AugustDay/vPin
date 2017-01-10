@@ -24,6 +24,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import uw.virtualpin.Data.CurrentUser;
 import uw.virtualpin.Data.UserLocalStore;
 import uw.virtualpin.HelperClasses.ImageManager;
 import uw.virtualpin.R;
@@ -76,17 +77,8 @@ public class ProfilePage extends AppCompatActivity {
         newImage = "NO_IMAGE";
         userLocalStore = new UserLocalStore(this);
 
-
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if (extras == null) {
-                username = null;
-            } else {
-                username = extras.getString("USERNAME");
-            }
-        } else {
-            username = (String) savedInstanceState.getSerializable("USERNAME");
-        }
+        CurrentUser currentUser = new CurrentUser();
+        username = currentUser.username;
 
         usernameText.setTextSize(16);
         emailText.setTextSize(16);

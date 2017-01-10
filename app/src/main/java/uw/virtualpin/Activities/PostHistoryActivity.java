@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import uw.virtualpin.Data.CurrentUser;
 import uw.virtualpin.Data.Pin;
 import uw.virtualpin.HelperClasses.AsyncManager;
 import uw.virtualpin.Interfaces.OnCompletionListener;
@@ -40,16 +41,8 @@ public class PostHistoryActivity extends AppCompatActivity implements OnCompleti
 
         postsList = (ListView) findViewById(R.id.postsList);
 
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if (extras == null) {
-                username = null;
-            } else {
-                username = extras.getString("USERNAME");
-            }
-        } else {
-            username = (String) savedInstanceState.getSerializable("USERNAME");
-        }
+        CurrentUser currentUser = new CurrentUser();
+        username = currentUser.username;
 
         asyncManager = new AsyncManager(findViewById(android.R.id.content), this);
         asyncManager.pinHistory(username);

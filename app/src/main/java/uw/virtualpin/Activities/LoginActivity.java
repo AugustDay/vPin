@@ -27,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import uw.virtualpin.Data.CurrentUser;
 import uw.virtualpin.Data.UserLocalStore;
 import uw.virtualpin.Data.Users;
 import uw.virtualpin.R;
@@ -244,6 +245,8 @@ public class LoginActivity extends AppCompatActivity {
                 if(checkCreditialsValid()) {
                     Intent intent = new Intent(getApplicationContext(), InboxActivity.class);
                     intent.putExtra("USERNAME", mUsers.getPassword());
+                    CurrentUser currentUser = new CurrentUser();
+                    currentUser.username = mUsers.getPassword();
                     startActivity(intent);
                     finish();
 
