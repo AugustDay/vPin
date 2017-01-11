@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import uw.virtualpin.Activities.DropPinActivity;
+import uw.virtualpin.Activities.InboxActivity;
 import uw.virtualpin.Activities.PostHistoryActivity;
 import uw.virtualpin.Activities.ProfilePage;
 import uw.virtualpin.R;
@@ -26,6 +27,7 @@ public class NavigationFragment extends Fragment {
         setupDropPinButton(view);
         setupPinHistoryButton(view);
         setupProfilePageButton(view);
+        setupInboxButton(view);
         return view;
     }
 
@@ -35,6 +37,17 @@ public class NavigationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DropPinActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void setupInboxButton(View view) {
+        Button button = (Button) view.findViewById(R.id.inboxButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), InboxActivity.class);
                 startActivity(intent);
             }
         });

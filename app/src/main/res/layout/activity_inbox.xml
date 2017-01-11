@@ -16,11 +16,11 @@
     </fragment>
 
     <ListView
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="#000000"
-        android:dividerHeight="1dp"
+        android:elevation="4dp"
+        android:divider="#e4e5e7"
+        android:dividerHeight="0.5dp"
         android:id="@+id/inboxList"></ListView>
 
 
