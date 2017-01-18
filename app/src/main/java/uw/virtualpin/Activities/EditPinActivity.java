@@ -51,9 +51,6 @@ public class EditPinActivity extends AppCompatActivity implements OnCompletionLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_pin);
 
-        Bundle extras = getIntent().getExtras();
-        pinDetails = extras.getStringArrayList("PINS");
-
         filled = false;
         imageManager = new ImageManager();
         creatorText = (TextView) findViewById(R.id.creatorTextEdit);
@@ -76,7 +73,7 @@ public class EditPinActivity extends AppCompatActivity implements OnCompletionLi
                 encodedImage = imageManager.convertBitmapToByteArray
                         (((BitmapDrawable) imageView.getDrawable()).getBitmap());
 
-                if(message.equalsIgnoreCase(pinDetails.get(3))) {
+                if(message.equalsIgnoreCase(currentPin.message)){
                     Snackbar.make(findViewById(android.R.id.content), "No message changes detected.", Snackbar.LENGTH_LONG).show();
                     return;
                 }
@@ -87,7 +84,7 @@ public class EditPinActivity extends AppCompatActivity implements OnCompletionLi
                 }
 
                 asyncManager.setImage(encodedImage);
-                asyncManager.updatePin(pinDetails.get(0), message);
+                asyncManager.updatePin(currentPin.id, message);
             }
         });
     }

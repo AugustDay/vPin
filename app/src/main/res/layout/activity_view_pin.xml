@@ -42,11 +42,15 @@
 
     <TextView
         android:textSize="14dp"
-        android:paddingBottom="10dp"
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Message: "
+        android:text="Message: "/>
+
+    <TextView
+        android:paddingBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/messageTextView" />
 
     <ImageView
@@ -61,7 +65,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:background="#f1f2f3"
-        android:layout_marginTop="140dp"
+        android:layout_marginTop="80dp"
         android:gravity="bottom">
 
         <Button
@@ -88,7 +92,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="110dp"
+            android:layout_marginLeft="100dp"
             android:layout_weight="1"
             android:id="@+id/favoriteButton"
             android:gravity="right|center"

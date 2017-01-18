@@ -28,7 +28,6 @@ public class ViewPinActivity extends AppCompatActivity implements OnCompletionLi
 
     public ViewPinActivity() {
         encodedImage = "NO_IMAGE";
-        asyncManager = new AsyncManager(findViewById(android.R.id.content), this);
         imageManager = new ImageManager();
         currentPin = new CurrentPin();
     }
@@ -38,11 +37,14 @@ public class ViewPinActivity extends AppCompatActivity implements OnCompletionLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_pin);
 
+        asyncManager = new AsyncManager(findViewById(android.R.id.content), this);
         creatorText = (TextView) findViewById(R.id.creatorTextView);
         createdDateText = (TextView) findViewById(R.id.dateTextView);
         messageText = (TextView) findViewById(R.id.messageTextView);
         locationText = (TextView) findViewById(R.id.locationTextView);
         image = (ImageView) findViewById(R.id.imageViewView);
+
+        asyncManager.getPin(currentPin.id);
     }
 
     private void setupPinDetails() {
