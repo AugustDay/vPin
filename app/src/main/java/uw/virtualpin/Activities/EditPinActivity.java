@@ -18,26 +18,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import uw.virtualpin.Data.CurrentPin;
 import uw.virtualpin.HelperClasses.AsyncManager;
 import uw.virtualpin.HelperClasses.ImageManager;
 import uw.virtualpin.Interfaces.OnCompletionListener;
 import uw.virtualpin.R;
 
-/*
-
-Author: Tyler Brent
-
-This class represents the pin object after an item is clicked in the PostHistory list.
-It is the expanded view of that pin. Here you can update any messsages you've left in the pin.
-You cannot update the image, although that was a feature we tried to implement but ran out of time
-due to a bug with the design.
-
-Note: below is some commented out code that will be used to update the pin image. It is left intenionally
-from a previous attempt.
-
- */
-
-public class PinActivity extends AppCompatActivity implements OnCompletionListener {
+public class EditPinActivity extends AppCompatActivity implements OnCompletionListener {
 
     ArrayList<String> pinDetails;
     private TextView creatorText;
@@ -47,29 +34,32 @@ public class PinActivity extends AppCompatActivity implements OnCompletionListen
     private Button updateButton;
     private String encodedImage;
     private ImageManager imageManager;
+    private CurrentPin currentPin;
     private static final int PICK_IMAGE = 100;
     private AsyncManager asyncManager;
     boolean filled;
 
-    public PinActivity() {
+    public EditPinActivity() {
+
         pinDetails = new ArrayList<>();
+        currentPin = new CurrentPin();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_pin);
+        setContentView(R.layout.activity_edit_pin);
 
         Bundle extras = getIntent().getExtras();
         pinDetails = extras.getStringArrayList("PINS");
 
         filled = false;
         imageManager = new ImageManager();
-        creatorText = (TextView) findViewById(R.id.creatorTextHistory);
-        locationText = (TextView) findViewById(R.id.locationTextHistory);
-        messageText = (EditText) findViewById(R.id.messageTextHistory);
-        imageView = (ImageView) findViewById(R.id.imageViewHistory);
+        creatorText = (TextView) findViewById(R.id.creatorTextEdit);
+        locationText = (TextView) findViewById(R.id.locationTextEdit);
+        messageText = (EditText) findViewById(R.id.messageTextEdit);
+        imageView = (ImageView) findViewById(R.id.imageViewEdit);
         updateButton = (Button) findViewById(R.id.updateButton);
         asyncManager = new AsyncManager(findViewById(android.R.id.content), this);
 
@@ -106,26 +96,21 @@ public class PinActivity extends AppCompatActivity implements OnCompletionListen
         super.onStart();
         if(filled == false) {
             AsyncManager aManager = new AsyncManager(findViewById(android.R.id.content), this);
-            aManager.getPin(pinDetails.get(0));
+            aManager.getPin(currentPin.id);
         }
     }
 
     private void setupPinDetails() {
-        try {
-            creatorText.setText("Created by: " + pinDetails.get(1));
-            locationText.setText("Location: " + pinDetails.get(2));
-            messageText.setText(pinDetails.get(3));
-            imageView.setImageBitmap(imageManager.convertEncodedImageToBitmap(pinDetails.get(4)));
-
-        } catch (Exception e) {
-            Snackbar.make(findViewById(android.R.id.content), "Error loading pin, please try again.", Snackbar.LENGTH_LONG);
-        }
+        creatorText.setText("Created by: " + currentPin.userName);
+        locationText.setText("Location: " + currentPin.coordinates);
+        messageText.setText(currentPin.message);
+        imageView.setImageBitmap(imageManager.convertEncodedImageToBitmap(currentPin.encodedImage));
     }
 
     private void parseJson(String jsonString) {
         try {
             JSONObject jsonObject = new JSONObject(jsonString);
-            pinDetails.add(jsonObject.getString("image"));
+            currentPin.encodedImage = jsonObject.getString("image");
 
         } catch (JSONException e) {
             e.printStackTrace();

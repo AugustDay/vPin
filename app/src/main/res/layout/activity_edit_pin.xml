@@ -1,15 +1,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/test2"
-    tools:context="uw.virtualpin.Activities.PinActivity">
+    tools:context="uw.virtualpin.Activities.EditPinActivity">
 
     <fragment
         android:name="uw.virtualpin.Fragments.NavigationFragment"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </fragment>
@@ -19,8 +17,8 @@
         android:paddingBottom="10dp"
         android:textStyle="bold"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/creatorTextHistory"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/creatorTextEdit"/>
 
     <TextView
         android:textSize="14dp"
@@ -28,7 +26,7 @@
         android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/locationTextHistory"/>
+        android:id="@+id/locationTextEdit"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -39,21 +37,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textAutoCorrect|textCapSentences|textMultiLine"
-        android:id="@+id/messageTextHistory"/>
-
-    <Button
-        android:background="#00ff00"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/updateButton"
-        android:textAlignment="center"
-        android:text="Update"
-        android:paddingBottom="5dp"/>
+        android:id="@+id/messageTextEdit"/>
 
     <ImageView
         android:paddingTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/imageViewHistory"/>
+        android:scaleType="centerCrop"
+        android:id="@+id/imageViewEdit"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="bottom">
+
+        <Button
+            android:background="#00ff00"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/updateButton"
+            android:textAlignment="center"
+            android:text="Update"/>
+
+        <Button
+            android:background="#cc3300"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/deleteButton"
+            android:textAlignment="center"
+            android:text="Delete"/>
+    </LinearLayout>
 
 </LinearLayout>

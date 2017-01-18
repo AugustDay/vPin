@@ -72,7 +72,7 @@ public class DropPinActivity extends AppCompatActivity implements OnMapReadyCall
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_drop_pin);
+        setContentView(R.layout.activity_drop_pin);
 
         final Button uploadImageButton = (Button) findViewById(R.id.uploadImageButton);
         imageManager = new ImageManager();
@@ -99,11 +99,6 @@ public class DropPinActivity extends AppCompatActivity implements OnMapReadyCall
         });
     }
 
-    /**
-     * Overridden onStart initializes the Google Map fragment and the Location manager.
-     * The LocationManager is a helper class designed to manage all things needed
-     * to obtain location.
-     */
     @Override
     public void onStart() {
         super.onStart();
@@ -114,21 +109,12 @@ public class DropPinActivity extends AppCompatActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
     }
 
-    /**
-     * Overridden onPause stops the location manager when it this fragment
-     * is put on pause.
-     */
     @Override
     public void onPause() {
         super.onPause();
         locationManager.stopLocationManager();
     }
 
-    /**
-     * Overridden onMapReady sets the current map.
-     *
-     * @param googleMap the google map fragment.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -136,12 +122,6 @@ public class DropPinActivity extends AppCompatActivity implements OnMapReadyCall
 
     }
 
-    /**
-     * Gives a visible representation of where the user is on the map
-     * by zooming to the location and dropping a pin.
-     *
-     * @param location the location of the user.
-     */
     private void setMapLocation(Location location) {
         if (location == null) {
             textGps.setText("Error loading location...");
@@ -166,45 +146,23 @@ public class DropPinActivity extends AppCompatActivity implements OnMapReadyCall
         updateTextView(lat, lng);
     }
 
-    /**
-     * Updates the users location when they move.
-     *
-     * @param location the current location of the user.
-     */
     @Override
     public void onLocationChanged(Location location) {
         Log.e("Location Changed: ", location.toString());
         setMapLocation(location);
     }
 
-    /**
-     * Updates the text view that gives a visible representation of the users
-     * coordinates.
-     *
-     * @param lat the latitude position of the user.
-     * @param lng the longitude position of the user.
-     */
     private void updateTextView(double lat, double lng) {
         String textLocation = "Location: (" + lat + ", " + lng + ")";
         final TextView textCoordinates = (TextView) this.findViewById(R.id.gps_location_text);
         textCoordinates.setText(textLocation);
     }
 
-    /**
-     * Opens the image gallery on the users device so they may select an image.
-     */
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
     }
 
-    /**
-     * On the resolution of opening the image gallery, this sets the imageView to the image chosen.
-     *
-     * @param requestCode the request code.
-     * @param resultCode the result code.
-     * @param data the data.
-     */
     @Override
     public void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -214,12 +172,6 @@ public class DropPinActivity extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
-    /**
-     * This method sets up the button for when a user presses the drop pin button.
-     * It resets the image and the message and calls the async task to upload the information.
-     *
-     * @param view the current view.
-     */
     private void setupDropPinButton(View view) {
         final Button pinButton = (Button) view.findViewById(R.id.postButton);
         pinButton.setOnClickListener(new View.OnClickListener() {
@@ -255,12 +207,6 @@ public class DropPinActivity extends AppCompatActivity implements OnMapReadyCall
         });
     }
 
-    /**
-     * Sets up the edit text to either collapse or show the other information on the screen.
-     * This allows the user to see what they are typing by clearing the screen of clutter.
-     *
-     * @param view the current view.
-     */
     private void setupEditTextShowHide(View view) {
         show_text.setVisibility(View.GONE);
 
@@ -290,11 +236,6 @@ public class DropPinActivity extends AppCompatActivity implements OnMapReadyCall
         });
     }
 
-    /**
-     * Sets views is what toggles the information on the screen as visible or not.
-     *
-     * @param on a flag for whether the information is being turned on or off.
-     */
     private void setViews(Boolean on) {
         if(on) {
             FragmentManager fm = getSupportFragmentManager();
@@ -311,9 +252,6 @@ public class DropPinActivity extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
-    /**
-     * Closes the soft keyboard
-     */
     private void closeSoftKeyboard() {
         View view = getCurrentFocus();
         if (view != null) {

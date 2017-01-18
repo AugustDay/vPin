@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_view_pin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="uw.virtualpin.Activities.ViewPinActivity">
+
+    <fragment
+        android:name="uw.virtualpin.Fragments.NavigationFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </fragment>
+
+    <TextView
+        android:textSize="14dp"
+        android:paddingBottom="10dp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Created By: "
+        android:id="@+id/creatorTextView"/>
+
+    <TextView
+        android:textSize="14dp"
+        android:paddingBottom="10dp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Created: "
+        android:id="@+id/dateTextView"/>
+
+    <TextView
+        android:textSize="14dp"
+        android:paddingBottom="10dp"
+        android:textStyle="bold"
+        android:text="Location: "
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/locationTextView"/>
+
+    <TextView
+        android:textSize="14dp"
+        android:paddingBottom="10dp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Message: "
+        android:id="@+id/messageTextView" />
+
+    <ImageView
+        android:id="@+id/imageViewView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/navigation_header_image" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="#f1f2f3"
+        android:layout_marginTop="140dp"
+        android:gravity="bottom">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/likeButton"
+            android:textAlignment="center"
+            android:gravity="left|center"
+            android:backgroundTint="@color/colorLimeGreen"
+            android:elevation="-4dp"
+            android:text="Like"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/dislikeButton"
+            android:gravity="left|center"
+            android:textAlignment="center"
+            android:backgroundTint="#cc3300"
+            android:text="Dislike"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="110dp"
+            android:layout_weight="1"
+            android:id="@+id/favoriteButton"
+            android:gravity="right|center"
+            android:textAlignment="center"
+            android:backgroundTint="@color/colorAccent"
+            android:text="Favorite"/>
+    </LinearLayout>
+
+</LinearLayout>

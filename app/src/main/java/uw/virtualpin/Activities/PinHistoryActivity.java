@@ -17,27 +17,28 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import uw.virtualpin.Data.CurrentPin;
 import uw.virtualpin.Data.CurrentUser;
 import uw.virtualpin.Data.Pin;
 import uw.virtualpin.HelperClasses.AsyncManager;
 import uw.virtualpin.Interfaces.OnCompletionListener;
 import uw.virtualpin.R;
 
-public class PostHistoryActivity extends AppCompatActivity implements OnCompletionListener {
+public class PinHistoryActivity extends AppCompatActivity implements OnCompletionListener {
 
     private ListView postsList;
     private ArrayList<Pin> pins;
     private AsyncManager asyncManager;
     private String username;
 
-    public PostHistoryActivity() {
+    public PinHistoryActivity() {
         pins = new ArrayList<>();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_post_history);
+        setContentView(R.layout.activity_post_history);
 
         postsList = (ListView) findViewById(R.id.postsList);
 
@@ -85,16 +86,9 @@ public class PostHistoryActivity extends AppCompatActivity implements OnCompleti
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-                ArrayList<String> pinData = new ArrayList<String>();
                 Pin pin = pins.get(position);
-
-                pinData.add(pin.getId());
-                pinData.add(pin.getUserName());
-                pinData.add("(" + pin.getLatitude() + ", " + pin.getLongitude() + ")");
-                pinData.add(pin.getMessage());
-
-                Intent intent = new Intent(getApplicationContext(), PinActivity.class);
-                intent.putExtra("PINS", pinData);
+                CurrentPin currentPin = new CurrentPin(pin);
+                Intent intent = new Intent(getApplicationContext(), EditPinActivity.class);
                 startActivity(intent);
             }
         });

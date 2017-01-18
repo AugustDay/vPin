@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import uw.virtualpin.Data.CurrentPin;
 import uw.virtualpin.Data.Pin;
 import uw.virtualpin.HelperClasses.AsyncManager;
 import uw.virtualpin.HelperClasses.LocationManager;
@@ -73,16 +74,15 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
-                ArrayList<String> pinData = new ArrayList<String>();
                 Pin pin = pins.get(position);
+                CurrentPin currentPin = new CurrentPin(pin);
 
-                pinData.add(pin.getId());
-                pinData.add(pin.getUserName());
-                pinData.add("(" + pin.getLatitude() + ", " + pin.getLongitude() + ")");
-                pinData.add(pin.getMessage());
+                currentPin.id = pin.getId();
+                currentPin.userName = pin.getUserName();
+                currentPin.coordinates = "(" + pin.getLatitude() + ", " + pin.getLongitude() + ")";
+                currentPin.message = pin.getMessage();
 
-                Intent intent = new Intent(getApplicationContext(), PinActivity.class);
-                intent.putStringArrayListExtra("PINS", pinData);
+                Intent intent = new Intent(getApplicationContext(), ViewPinActivity.class);
                 startActivity(intent);
             }
         });

@@ -22,6 +22,7 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
 
     private final static String URL = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=";
     private final static String CREATE_PIN_CMD = "new_pin";
+    private final static String DELETE_PIN_CMD = "delete_pin";
     private final static String PIN_HISTORY_CMD = "pin_history";
     private final static String ALL_PINS_CMD = "select*users";
     private final static String GET_PIN_CMD = "get_pin";
@@ -60,6 +61,11 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
         image = pin.getEncodedImage();
 
         execute(URL + CREATE_PIN_CMD + extension);
+    }
+
+    public void deletePin(String pinId) {
+        String extension = "&id=" + pinId;
+        execute(URL + DELETE_PIN_CMD + extension);
     }
 
     public void pinHistory(String username) {

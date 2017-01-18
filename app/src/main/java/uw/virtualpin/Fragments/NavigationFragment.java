@@ -11,7 +11,7 @@ import android.widget.Button;
 
 import uw.virtualpin.Activities.DropPinActivity;
 import uw.virtualpin.Activities.InboxActivity;
-import uw.virtualpin.Activities.PostHistoryActivity;
+import uw.virtualpin.Activities.PinHistoryActivity;
 import uw.virtualpin.Activities.ProfilePage;
 import uw.virtualpin.R;
 
@@ -58,7 +58,7 @@ public class NavigationFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), PostHistoryActivity.class);
+                Intent intent = new Intent(getActivity(), PinHistoryActivity.class);
                 startActivity(intent);
             }
         });
