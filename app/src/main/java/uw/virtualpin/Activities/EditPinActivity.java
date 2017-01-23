@@ -1,5 +1,7 @@
 package uw.virtualpin.Activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -127,11 +129,37 @@ public class EditPinActivity extends AppCompatActivity implements OnCompletionLi
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                asyncManager.deletePin(currentPin.id);
-                Intent intent = new Intent(getApplicationContext(), PinHistoryActivity.class);
-                startActivity(intent);
+                deleteDialog();
             }
         });
+    }
+
+    private void deleteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Delete this pin?");
+        builder.setCancelable(true);
+
+        builder.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        asyncManager.deletePin(currentPin.id);
+                        Intent intent = new Intent(getApplicationContext(), PinHistoryActivity.class);
+                        startActivity(intent);
+                        dialog.cancel();
+                    }
+                });
+
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private void setupUpdateButton() {
