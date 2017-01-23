@@ -60,7 +60,7 @@
         </activity>
         <activity
             android:name=".Activities.EditPinActivity"
-            android:label="Pin"
+            android:label="Details"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -71,7 +71,7 @@
         </activity>
         <activity
             android:name=".Activities.PinHistoryActivity"
-            android:label="Post History"
+            android:label="History"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -82,7 +82,7 @@
         </activity>
         <activity
             android:name=".Activities.DropPinActivity"
-            android:label="Drop Pin"
+            android:label="Pin"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -93,7 +93,7 @@
         </activity>
         <activity
             android:name=".Activities.ViewPinActivity"
-            android:label="Pin"
+            android:label="Details"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>

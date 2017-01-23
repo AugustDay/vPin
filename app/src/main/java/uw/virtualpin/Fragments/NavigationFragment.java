@@ -17,6 +17,11 @@ import uw.virtualpin.R;
 
 public class NavigationFragment extends Fragment {
 
+    private Button dropPinButton;
+    private Button inboxButton;
+    private Button pinHistoryButton;
+    private Button profilePageButton;
+
     public NavigationFragment() {
     }
 
@@ -28,12 +33,14 @@ public class NavigationFragment extends Fragment {
         setupPinHistoryButton(view);
         setupProfilePageButton(view);
         setupInboxButton(view);
+        applySelectedColor();
+
         return view;
     }
 
     private void setupDropPinButton(View view) {
-        Button button = (Button) view.findViewById(R.id.dropPinButton);
-        button.setOnClickListener(new View.OnClickListener() {
+        dropPinButton = (Button) view.findViewById(R.id.dropPinButton);
+        dropPinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DropPinActivity.class);
@@ -43,8 +50,8 @@ public class NavigationFragment extends Fragment {
     }
 
     private void setupInboxButton(View view) {
-        Button button = (Button) view.findViewById(R.id.inboxButton);
-        button.setOnClickListener(new View.OnClickListener() {
+        inboxButton =  (Button) view.findViewById(R.id.inboxButton);
+        inboxButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), InboxActivity.class);
@@ -54,8 +61,8 @@ public class NavigationFragment extends Fragment {
     }
 
     private void setupPinHistoryButton(View view) {
-        Button button = (Button) view.findViewById(R.id.pinHistoryButton);
-        button.setOnClickListener(new View.OnClickListener() {
+        pinHistoryButton = (Button) view.findViewById(R.id.pinHistoryButton);
+        pinHistoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), PinHistoryActivity.class);
@@ -65,13 +72,29 @@ public class NavigationFragment extends Fragment {
     }
 
     private void setupProfilePageButton(View view) {
-        Button button = (Button) view.findViewById(R.id.profileButton);
-        button.setOnClickListener(new View.OnClickListener() {
+        profilePageButton = (Button) view.findViewById(R.id.profileButton);
+        profilePageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProfilePage.class);
                 startActivity(intent);
             }
         });
+    }
+
+    private void applySelectedColor() {
+        String className = getActivity().getLocalClassName();
+        if(className.contains("DropPin")) {
+            dropPinButton.setBackgroundColor(getResources().getColor(R.color.colorLightBlue));
+        }
+        else if(className.contains("ProfilePage")) {
+            profilePageButton.setBackgroundColor(getResources().getColor(R.color.colorLightBlue));
+        }
+        else if(className.contains("PinHistory") || className.contains("EditPin")) {
+            pinHistoryButton.setBackgroundColor(getResources().getColor(R.color.colorLightBlue));
+        }
+        else if(className.contains("Inbox") || className.contains("ViewPin")) {
+            inboxButton.setBackgroundColor(getResources().getColor(R.color.colorLightBlue));
+        }
     }
 }

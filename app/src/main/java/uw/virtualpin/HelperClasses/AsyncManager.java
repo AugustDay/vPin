@@ -20,7 +20,7 @@ import uw.virtualpin.Data.Pin;
 
 public class AsyncManager extends AsyncTask<String, Integer, String> {
 
-    private final static String URL = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=";
+    private final static String URL = "http://cssgate.insttech.washington.edu/~adi1996/info.php?cmd=";
     private final static String CREATE_PIN_CMD = "new_pin";
     private final static String DELETE_PIN_CMD = "delete_pin";
     private final static String PIN_HISTORY_CMD = "pin_history";
@@ -64,7 +64,8 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
     }
 
     public void deletePin(String pinId) {
-        String extension = "&id=" + pinId;
+        String extension = "&pinID=" + pinId;
+        Log.e("DELETE", URL + DELETE_PIN_CMD + extension);
         execute(URL + DELETE_PIN_CMD + extension);
     }
 
@@ -119,6 +120,11 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
 
     public void setImage(String encodedImage) {
         image = encodedImage;
+    }
+
+    public AsyncManager resetAsyncManager() {
+        AsyncManager copy = new AsyncManager(this.view, this.onCompletionListener);
+        return copy;
     }
 
     private boolean valid(String result) {

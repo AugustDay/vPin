@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +33,7 @@ public class EditPinActivity extends AppCompatActivity implements OnCompletionLi
     private EditText messageText;
     private ImageView imageView;
     private Button updateButton;
+    private Button deleteButton;
     private String encodedImage;
     private ImageManager imageManager;
     private CurrentPin currentPin;
@@ -58,6 +60,7 @@ public class EditPinActivity extends AppCompatActivity implements OnCompletionLi
         messageText = (EditText) findViewById(R.id.messageTextEdit);
         imageView = (ImageView) findViewById(R.id.imageViewEdit);
         updateButton = (Button) findViewById(R.id.updateButton);
+        deleteButton = (Button) findViewById(R.id.deleteButton);
         asyncManager = new AsyncManager(findViewById(android.R.id.content), this);
 
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -66,34 +69,33 @@ public class EditPinActivity extends AppCompatActivity implements OnCompletionLi
                 openGallery();
             }
         });
-        updateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = messageText.getText().toString();
-                encodedImage = imageManager.convertBitmapToByteArray
-                        (((BitmapDrawable) imageView.getDrawable()).getBitmap());
-
-                if(message.equalsIgnoreCase(currentPin.message)){
-                    Snackbar.make(findViewById(android.R.id.content), "No message changes detected.", Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-
-                if(message.length() == 0) {
-                    Snackbar.make(findViewById(android.R.id.content), "Cannot enter an empty message.", Snackbar.LENGTH_LONG).show();
-                    return;
-                }
-
-                asyncManager.setImage(encodedImage);
-                asyncManager.updatePin(currentPin.id, message);
-            }
-        });
+        setupUpdateButton();
+        setupDeleteButton();
     }
 
     public void onStart() {
         super.onStart();
         if(filled == false) {
-            AsyncManager aManager = new AsyncManager(findViewById(android.R.id.content), this);
-            aManager.getPin(currentPin.id);
+            asyncManager.getPin(currentPin.id);
+        }
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
+            Uri imageUri = data.getData();
+            imageView.setImageURI(imageUri);
+        }
+    }
+
+    @Override
+    public void onComplete(String result) {
+        asyncManager = asyncManager.resetAsyncManager();
+        Log.e("RESULT EDIT", result);
+        if(!filled) {
+            filled = true;
+            parseJson(result);
         }
     }
 
@@ -121,20 +123,38 @@ public class EditPinActivity extends AppCompatActivity implements OnCompletionLi
         startActivityForResult(gallery, PICK_IMAGE);
     }
 
-    @Override
-    public void onActivityResult(final int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
-            Uri imageUri = data.getData();
-            imageView.setImageURI(imageUri);
-        }
+    private void setupDeleteButton() {
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                asyncManager.deletePin(currentPin.id);
+                Intent intent = new Intent(getApplicationContext(), PinHistoryActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
-    @Override
-    public void onComplete(String result) {
-        if(!filled) {
-            filled = true;
-            parseJson(result);
-        }
+    private void setupUpdateButton() {
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = messageText.getText().toString();
+                encodedImage = imageManager.convertBitmapToByteArray
+                        (((BitmapDrawable) imageView.getDrawable()).getBitmap());
+
+                if(message.equalsIgnoreCase(currentPin.message)){
+                    Snackbar.make(findViewById(android.R.id.content), "No message changes detected.", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
+                if(message.length() == 0) {
+                    Snackbar.make(findViewById(android.R.id.content), "Cannot enter an empty message.", Snackbar.LENGTH_LONG).show();
+                    return;
+                }
+
+                asyncManager.setImage(encodedImage);
+                asyncManager.updatePin(currentPin.id, message);
+            }
+        });
     }
 }

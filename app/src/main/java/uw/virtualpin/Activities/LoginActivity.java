@@ -35,9 +35,9 @@ import uw.virtualpin.R;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String LOGIN_URL
-            = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=select*users";
+            = "http://cssgate.insttech.washington.edu/~adi1996/info.php?cmd=select*users";
     private static final String USER_DATA
-            = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=get_userdata&username=";
+            = "http://cssgate.insttech.washington.edu/~adi1996/info.php?cmd=get_userdata&username=";
     public Users mUsers;
     private SharedPreferences mSharedPreferences;
     public static int logInCount = 0;//use to fix rotate losing game states bug
