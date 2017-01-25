@@ -263,5 +263,6 @@ public class DropPinActivity extends AppCompatActivity implements OnMapReadyCall
 
     @Override
     public void onComplete(String result) {
+        asyncManager = asyncManager.resetAsyncManager();
     }
 }

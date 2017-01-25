@@ -12,6 +12,10 @@ public class Pin {
     private double latitude;
     private double longitude;
     private String encodedImage;
+    private int upvotes;
+    private int downvotes;
+    private int views;
+    private int score;
 
     public Pin(String userName, double latitude, double longitude, String message, String encodedImage) {
         this.message = message;
@@ -19,6 +23,49 @@ public class Pin {
         this.latitude = latitude;
         this.longitude = longitude;
         this.encodedImage = encodedImage;
+    }
+
+    public Pin(String userName, double latitude, double longitude
+            , String message, String encodedImage, int upvotes, int downvotes, int views, int score) {
+
+        this(userName, latitude, longitude, message, encodedImage);
+        this.upvotes = upvotes;
+        this.downvotes = downvotes;
+        this.views = views;
+        this.score = score;
+
+    }
+
+    public int getUpvotes() {
+        return upvotes;
+    }
+
+    public void setUpvotes(int upvotes) {
+        this.upvotes = upvotes;
+    }
+
+    public int getDownvotes() {
+        return downvotes;
+    }
+
+    public void setDownvotes(int downvotes) {
+        this.downvotes = downvotes;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public String getId() {
