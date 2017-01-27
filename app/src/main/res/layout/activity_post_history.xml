@@ -16,6 +16,28 @@
         android:layout_height="wrap_content">
     </fragment>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="10dp"
+        android:id="@+id/postHistorySearchBar">
+
+        <ImageView
+            android:src="@android:drawable/ic_search_category_default"
+            android:paddingTop="8dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp" />
+
+        <EditText
+            android:textSize="20dp"
+            android:hint="Search:"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/postHistorySearchBarEditText"/>
+
+    </LinearLayout>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -5,10 +5,13 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.google.android.gms.location.LocationListener;
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 import uw.virtualpin.Data.CurrentPin;
 import uw.virtualpin.Data.Pin;
 import uw.virtualpin.HelperClasses.AsyncManager;
+import uw.virtualpin.HelperClasses.FilterManager;
 import uw.virtualpin.HelperClasses.LocationManager;
 import uw.virtualpin.Interfaces.OnCompletionListener;
 import uw.virtualpin.R;
@@ -32,8 +36,10 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
     private ListView listView;
     private ArrayList<Pin> pins;
     private AsyncManager asyncManager;
+    FilterManager filterManager;
     private LocationManager locationManager;
     private Snackbar snackbar;
+    private EditText searchBar;
 
     public InboxActivity() {
         pins = new ArrayList<>();
@@ -46,6 +52,8 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
 
         listView = (ListView)findViewById(R.id.inboxList);
         locationManager = new LocationManager(this, this);
+        searchBar = (EditText) findViewById(R.id.inboxSearchBarEditText);
+        filterManager = new FilterManager(pins);
         snackbar = Snackbar.make(findViewById(android.R.id.content), "Getting your location.", Snackbar.LENGTH_INDEFINITE);
         snackbar.show();
 
@@ -59,12 +67,32 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         } else {
             username = (String) savedInstanceState.getSerializable("USERNAME");
         }
+
+        setupSearchBar();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         snackbar.dismiss();
+    }
+
+    private void setupSearchBar() {
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                pins = (ArrayList) filterManager.filter(s.toString());
+                setupListView(listView, getPinNames());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     private void setupListView(ListView listView, ArrayList<String> stringList) {
@@ -124,6 +152,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
 
     @Override
     public void onComplete(String result) {
+        asyncManager = asyncManager.resetAsyncManager();
         parseJSON(result);
     }
 

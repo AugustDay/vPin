@@ -5,10 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -21,6 +24,7 @@ import uw.virtualpin.Data.CurrentPin;
 import uw.virtualpin.Data.CurrentUser;
 import uw.virtualpin.Data.Pin;
 import uw.virtualpin.HelperClasses.AsyncManager;
+import uw.virtualpin.HelperClasses.FilterManager;
 import uw.virtualpin.Interfaces.OnCompletionListener;
 import uw.virtualpin.R;
 
@@ -30,6 +34,8 @@ public class PinHistoryActivity extends AppCompatActivity implements OnCompletio
     private ArrayList<Pin> pins;
     private AsyncManager asyncManager;
     private String username;
+    private EditText searchBar;
+    private FilterManager filterManager;
 
     public PinHistoryActivity() {
         pins = new ArrayList<>();
@@ -41,12 +47,15 @@ public class PinHistoryActivity extends AppCompatActivity implements OnCompletio
         setContentView(R.layout.activity_post_history);
 
         postsList = (ListView) findViewById(R.id.postsList);
+        searchBar = (EditText) findViewById(R.id.postHistorySearchBarEditText);
+        filterManager = new FilterManager(pins);
 
         CurrentUser currentUser = new CurrentUser();
         username = currentUser.username;
 
         asyncManager = new AsyncManager(findViewById(android.R.id.content), this);
         asyncManager.pinHistory(username);
+        setupSearchBar();
     }
 
     @Override
@@ -54,6 +63,24 @@ public class PinHistoryActivity extends AppCompatActivity implements OnCompletio
         super.onPause();
         Snackbar.make(findViewById(android.R.id.content), "Exiting Pin History", Snackbar.LENGTH_SHORT);
         asyncManager.cancel(true);
+    }
+
+    private void setupSearchBar() {
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                pins = (ArrayList) filterManager.filter(s.toString());
+                setupListView(postsList, getMessages());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
     private ArrayList<String> getMessages() {
