@@ -28,6 +28,8 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
     private final static String GET_PIN_CMD = "get_pin";
     private final static String UPDATE_PIN_CMD = "update_pin";
     private final static String NEARBY_PINS = "nearby_pins";
+    private final static String UPVOTE_PIN = "upvote";
+    private final static String DOWNVOTE_PIN = "downvote";
     private Snackbar snackbar;
     private View view;
     private String image;
@@ -35,6 +37,9 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
     private String asyncFinishedMessage;
     private String asyncErrorMessage;
     private OnCompletionListener onCompletionListener;
+    private boolean showStartMessage;
+    private boolean showFinishedMessage;
+
 
     public AsyncManager(View view, OnCompletionListener onCompletionListener) {
         this.onCompletionListener = onCompletionListener;
@@ -43,6 +48,8 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
         asyncStartMessage = "Starting process...";
         asyncFinishedMessage = "Process finished.";
         asyncErrorMessage = "Error processing request.";
+        showFinishedMessage = true;
+        showStartMessage = true;
     }
 
     public void createPin(Pin pin) {
@@ -102,6 +109,16 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
         execute(URL + NEARBY_PINS + extension);
     }
 
+    public void upvotePin(String pinId) {
+        String extension = "&id=" + pinId;
+        execute(URL + UPVOTE_PIN + extension);
+    }
+
+    public void downvotePin(String pinId) {
+        String extension = "&id=" + pinId;
+        execute(URL + DOWNVOTE_PIN + extension);
+    }
+
     public void customAsyncRequest(String customUrl) {
         execute(customUrl);
     }
@@ -116,6 +133,19 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
 
     public void setErrorMessage(String message) {
         asyncErrorMessage = message;
+    }
+
+    public void showStartMessage(Boolean status) {
+        showStartMessage = status;
+    }
+
+    public void showFinishedMessage(Boolean status) {
+        showFinishedMessage = status;
+    }
+
+    public void showMessages(Boolean status) {
+        showStartMessage = status;
+        showFinishedMessage = status;
     }
 
     public void setImage(String encodedImage) {
@@ -149,8 +179,10 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
         HttpURLConnection urlConnection = null;
         for (String url : urls) {
 
-            snackbar = Snackbar.make(view, asyncStartMessage, Snackbar.LENGTH_INDEFINITE);
-            snackbar.show();
+            if(showStartMessage) {
+                snackbar = Snackbar.make(view, asyncStartMessage, Snackbar.LENGTH_INDEFINITE);
+                snackbar.show();
+            }
 
             try {
                 URL urlObject = new URL(url);
@@ -189,11 +221,12 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        if (valid(result)) {
-            snackbar = Snackbar.make(view, asyncFinishedMessage, Snackbar.LENGTH_SHORT);
-            snackbar.show();
-        } else {
+        if (!valid(result)) {
             snackbar = Snackbar.make(view, asyncErrorMessage, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
+        else if(showFinishedMessage) {
+            snackbar = Snackbar.make(view, asyncFinishedMessage, Snackbar.LENGTH_SHORT);
             snackbar.show();
         }
 

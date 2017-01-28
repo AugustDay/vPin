@@ -64,41 +64,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:background="#f1f2f3"
         android:layout_marginTop="80dp"
-        android:gravity="bottom">
+        android:gravity="bottom|center">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/likeButton"
-            android:textAlignment="center"
-            android:gravity="left|center"
-            android:backgroundTint="@color/colorLimeGreen"
-            android:elevation="-4dp"
-            android:text="Like"/>
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_margin="15dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/thumbs_up_icon"
+            android:id="@+id/upvoteView"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/dislikeButton"
-            android:gravity="left|center"
-            android:textAlignment="center"
-            android:backgroundTint="#cc3300"
-            android:text="Dislike"/>
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="10dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/thumbs_down_icon"
+            android:id="@+id/downvoteView"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="100dp"
-            android:layout_weight="1"
-            android:id="@+id/favoriteButton"
-            android:gravity="right|center"
-            android:textAlignment="center"
-            android:backgroundTint="@color/colorAccent"
-            android:text="Favorite"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="15dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/heart_favorite_icon"
+            android:id="@+id/favoriteView"/>
     </LinearLayout>
 
 </LinearLayout>
