@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import uw.virtualpin.Adapters.ListViewAdapter;
 import uw.virtualpin.Data.CurrentPin;
 import uw.virtualpin.Data.CurrentUser;
 import uw.virtualpin.Data.Pin;
@@ -88,8 +89,9 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
     }
 
     private void setupListView(ListView listView, ArrayList<String> stringList) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
-                R.layout.listview_item, stringList);
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
+//                R.layout.listview_item, stringList);
+        ListViewAdapter adapter = new ListViewAdapter(this, pins);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
