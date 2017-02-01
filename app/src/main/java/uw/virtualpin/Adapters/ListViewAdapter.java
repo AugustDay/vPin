@@ -1,6 +1,7 @@
 package uw.virtualpin.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,10 +42,28 @@ public class ListViewAdapter extends ArrayAdapter<Pin> {
         TextView message = (TextView) rowView.findViewById(R.id.listview_message);
         TextView score = (TextView) rowView.findViewById(R.id.listview_score);
 
-        username.setText(pins.get(position).getUserName() + ": ");
+        int pinScore = pins.get(position).getScore();
+        String pinUsername = formatUsername(pins.get(position).getUserName());
+        formatScore(score, pinScore);
+
+        username.setText(pinUsername + ": ");
         message.setText("'" + pins.get(position).getMessage() + "'");
-        score.setText("+" + Integer.toString(pins.get(position).getScore()));
+        score.setText(score.getText() + Integer.toString(pinScore));
 
         return rowView;
+    }
+
+    public void formatScore(TextView scoreText, int score) {
+        if(score >= 0) {
+            scoreText.setText("+");
+            scoreText.setTextColor(Color.parseColor("#33cc33"));
+        } else {
+           scoreText.setTextColor(Color.parseColor("#e60000"));
+        }
+    }
+
+    public String formatUsername(String username) {
+        username = username.substring(0,1).toUpperCase() + username.substring(1);
+        return username;
     }
 }

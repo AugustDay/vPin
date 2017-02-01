@@ -110,7 +110,7 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
     }
 
     public void downvotePin(String pinId) {
-        String extension = "&=pinID" + pinId;
+        String extension = "&pinID=" + pinId;
         execute(URL + DOWNVOTE_PIN + extension);
     }
 

@@ -40,7 +40,7 @@ public class Pin {
         if(views >= 0) {
             viewScore = views/5;
         }
-        return viewScore + upvotes + downvotes;
+        return viewScore + upvotes + (-1*downvotes);
     }
 
     public int getUpvotes() {
