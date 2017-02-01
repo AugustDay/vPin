@@ -41,9 +41,9 @@ The user can change their avatar by clicking the image.
 
 public class ProfilePage extends AppCompatActivity {
 
-    private static final String UPDATE_AVATAR_URL = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=update_avatar&id=";
-    private static final String GET_AVATAR_URL = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=get_userdata&username=";
-    private static final String GET_NUMPOSTS_URL = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=pin_history_count&username=";
+    private static final String UPDATE_AVATAR_URL = "http://cssgate.insttech.washington.edu/~adi1996/info.php?cmd=update_avatar&id=";
+    private static final String GET_AVATAR_URL = "http://cssgate.insttech.washington.edu/~adi1996/info.php?cmd=get_userdata&username=";
+    private static final String GET_NUMPOSTS_URL = "http://cssgate.insttech.washington.edu/~adi1996/info.php?cmd=pin_history_count&username=";
     UserLocalStore userLocalStore;
     String username;
     String email;
