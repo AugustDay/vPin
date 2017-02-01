@@ -1,16 +1,22 @@
 package uw.virtualpin.Fragments;
 
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import uw.virtualpin.Activities.DropPinActivity;
 import uw.virtualpin.Activities.InboxActivity;
+import uw.virtualpin.Activities.LoginActivity;
 import uw.virtualpin.Activities.PinHistoryActivity;
 import uw.virtualpin.Activities.ProfilePage;
 import uw.virtualpin.R;
@@ -34,8 +40,37 @@ public class NavigationFragment extends Fragment {
         setupProfilePageButton(view);
         setupInboxButton(view);
         applySelectedColor();
-
         return view;
+    }
+
+    @Override
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.toolbar_menu, menu);
+        super.onCreateOptionsMenu(menu, menuInflater);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String itemTitle = item.getTitle().toString();
+
+        if(itemTitle.equalsIgnoreCase("Logout")) {
+            Intent logoutIntent = new Intent(getActivity(), LoginActivity.class);
+            getActivity().finishAffinity();
+            startActivity(logoutIntent);
+        }
+        else if(itemTitle.equalsIgnoreCase("Profile")) {
+            Intent profileIntent = new Intent(getActivity(), ProfilePage.class);
+            startActivity(profileIntent);
+        }
+
+        return true;
     }
 
     private void setupDropPinButton(View view) {
