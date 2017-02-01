@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import uw.virtualpin.Data.CurrentPin;
+import uw.virtualpin.Data.CurrentUser;
 import uw.virtualpin.Data.Pin;
 import uw.virtualpin.HelperClasses.AsyncManager;
 import uw.virtualpin.HelperClasses.FilterManager;
@@ -36,7 +37,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
     private ListView listView;
     private ArrayList<Pin> pins;
     private AsyncManager asyncManager;
-    FilterManager filterManager;
+    private FilterManager filterManager;
     private LocationManager locationManager;
     private Snackbar snackbar;
     private EditText searchBar;
@@ -50,23 +51,14 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inbox);
 
+        CurrentUser user = new CurrentUser();
+        username = user.username;
         listView = (ListView)findViewById(R.id.inboxList);
         locationManager = new LocationManager(this, this);
         searchBar = (EditText) findViewById(R.id.inboxSearchBarEditText);
         filterManager = new FilterManager(pins);
         snackbar = Snackbar.make(findViewById(android.R.id.content), "Getting your location.", Snackbar.LENGTH_INDEFINITE);
         snackbar.show();
-
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if (extras == null) {
-                username = null;
-            } else {
-                username = extras.getString("USERNAME");
-            }
-        } else {
-            username = (String) savedInstanceState.getSerializable("USERNAME");
-        }
 
         setupSearchBar();
     }
@@ -86,7 +78,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 pins = (ArrayList) filterManager.filter(s.toString());
-                setupListView(listView, getPinNames());
+                setupListView(listView, getPinDisplayViews());
             }
 
             @Override
@@ -116,13 +108,11 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         });
     }
 
-    private ArrayList<String> getPinNames() {
+    private ArrayList<String> getPinDisplayViews() {
         ArrayList<String> names = new ArrayList<>();
-        int index = 1;
 
         for(Pin pin : pins) {
-            names.add(index + ". " + pin.getMessage());
-            index++;
+            names.add(pin.getUserName() + ": " + pin.getMessage() + "+" + pin.getScore());
         }
 
         return names;
@@ -139,7 +129,10 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
                             ,Double.parseDouble(jsonObject.getString("latitude"))
                             ,Double.parseDouble(jsonObject.getString("longitude"))
                             ,jsonObject.getString("message")
-                            ,null);
+                            ,null
+                            ,Integer.parseInt(jsonObject.getString("upvotes"))
+                            ,Integer.parseInt(jsonObject.getString("downvotes"))
+                            ,Integer.parseInt(jsonObject.getString("views")));
 
                     pin.setId(jsonObject.getString("pinID"));
                     pins.add(pin);
@@ -147,7 +140,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
             } catch (JSONException e) {
                 Log.e("JSON", "Error parsing JSON string." + jsonString);
             }
-        setupListView(listView, getPinNames());
+             setupListView(listView, getPinDisplayViews());
         }
 
     @Override

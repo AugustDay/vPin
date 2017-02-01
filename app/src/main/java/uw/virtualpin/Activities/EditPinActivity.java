@@ -102,8 +102,8 @@ public class EditPinActivity extends AppCompatActivity implements OnCompletionLi
     }
 
     private void setupPinDetails() {
-        creatorText.setText("Created by: " + currentPin.userName);
-        locationText.setText("Location: " + currentPin.coordinates);
+        creatorText.setText(currentPin.userName);
+        locationText.setText(currentPin.coordinates);
         messageText.setText(currentPin.message);
         imageView.setImageBitmap(imageManager.convertEncodedImageToBitmap(currentPin.encodedImage));
     }

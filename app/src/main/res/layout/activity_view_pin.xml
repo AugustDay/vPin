@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingLeft="5dp"
     tools:context="uw.virtualpin.Activities.ViewPinActivity">
 
     <fragment
@@ -13,52 +14,58 @@
         android:layout_height="wrap_content">
     </fragment>
 
-    <TextView
-        android:textSize="14dp"
-        android:paddingBottom="10dp"
-        android:textStyle="bold"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Created By: "
-        android:id="@+id/creatorTextView"/>
+        android:orientation="horizontal">
+
+        <TextView
+            android:textSize="22dp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:text="Tylerkb2 "
+            android:id="@+id/creatorTextView"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" at "
+            android:id="@+id/userConjunctionLocTextView"/>
+
+        <TextView
+            android:textSize="19dp"
+            android:textStyle=""
+            android:text=" Tacoma Art Museum "
+            android:textColor="#000000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/locationTextView"/>
+
+    </LinearLayout>
 
     <TextView
-        android:textSize="14dp"
+        android:textSize="10dp"
         android:paddingBottom="10dp"
-        android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Created: "
+        android:text="Date Unknown"
         android:id="@+id/dateTextView"/>
 
     <TextView
         android:textSize="14dp"
-        android:paddingBottom="10dp"
-        android:textStyle="bold"
-        android:text="Location: "
+        android:textStyle=""
+        android:textColor="#000000"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/locationTextView"/>
-
-    <TextView
-        android:textSize="14dp"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Message: "/>
-
-    <TextView
-        android:paddingBottom="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:text=""
         android:id="@+id/messageTextView" />
 
     <ImageView
         android:id="@+id/imageViewView"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/navigation_header_image" />
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"

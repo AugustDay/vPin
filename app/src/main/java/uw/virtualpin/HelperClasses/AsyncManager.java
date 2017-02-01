@@ -63,16 +63,12 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
                 + "&message="
                 + pin.getMessage();
 
-        Log.e("Location Changed: ", extension);
-
         image = pin.getEncodedImage();
-
         execute(URL + CREATE_PIN_CMD + extension);
     }
 
     public void deletePin(String pinId) {
         String extension = "&pinID=" + pinId;
-        Log.e("DELETE", URL + DELETE_PIN_CMD + extension);
         execute(URL + DELETE_PIN_CMD + extension);
     }
 
@@ -105,17 +101,16 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
     public void nearbyPins(String latitude, String longitude) {
         String extension = "&latitude=" + latitude
                 + "&longitude=" + longitude;
-        Log.e("URL", URL + NEARBY_PINS + extension);
         execute(URL + NEARBY_PINS + extension);
     }
 
     public void upvotePin(String pinId) {
-        String extension = "&id=" + pinId;
+        String extension = "&pinID=" + pinId;
         execute(URL + UPVOTE_PIN + extension);
     }
 
     public void downvotePin(String pinId) {
-        String extension = "&id=" + pinId;
+        String extension = "&=pinID" + pinId;
         execute(URL + DOWNVOTE_PIN + extension);
     }
 
@@ -158,6 +153,8 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
     }
 
     private boolean valid(String result) {
+        result = result.toLowerCase();
+
         if(result.contains("false")) {
             return false;
         }
@@ -231,7 +228,7 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
         }
 
         image = "NO_IMAGE";
-        Log.e("RESULT", result);
+        Log.e("RESULT (ASYNC_MANAGER)", result);
         onCompletionListener.onComplete(result);
     }
 }

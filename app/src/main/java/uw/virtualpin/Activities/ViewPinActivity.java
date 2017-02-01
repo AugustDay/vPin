@@ -61,9 +61,11 @@ public class ViewPinActivity extends AppCompatActivity implements OnCompletionLi
     }
 
     private void setupPinDetails() {
-        creatorText.setText("Created by: " + currentPin.userName);
-        locationText.setText("Location: " + currentPin.coordinates);
-        messageText.setText(currentPin.message);
+        String usernameFormatted = currentPin.userName.substring(0,1).toUpperCase()
+                + currentPin.userName.substring(1);
+        creatorText.setText(usernameFormatted);
+        locationText.setText(currentPin.coordinates);
+        messageText.setText("'" + currentPin.message + "'");
         image.setImageBitmap(imageManager.convertEncodedImageToBitmap(currentPin.encodedImage));
     }
 

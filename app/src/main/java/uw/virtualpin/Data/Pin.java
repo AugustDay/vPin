@@ -26,14 +26,21 @@ public class Pin {
     }
 
     public Pin(String userName, double latitude, double longitude
-            , String message, String encodedImage, int upvotes, int downvotes, int views, int score) {
+            , String message, String encodedImage, int upvotes, int downvotes, int views) {
 
         this(userName, latitude, longitude, message, encodedImage);
         this.upvotes = upvotes;
         this.downvotes = downvotes;
         this.views = views;
-        this.score = score;
+        this.score = generateScore();
+    }
 
+    public int generateScore() {
+        int viewScore = 0;
+        if(views >= 0) {
+            viewScore = views/5;
+        }
+        return viewScore + upvotes + downvotes;
     }
 
     public int getUpvotes() {
