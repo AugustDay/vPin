@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="4dp"
-        android:divider="#e4e5e7"
+        android:divider="#000000"
         android:dividerHeight="0.5dp"
         android:id="@+id/inboxList"></ExpandableListView>
 

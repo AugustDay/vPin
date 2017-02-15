@@ -97,6 +97,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         int pinScore = pin.getScore();
         String pinUsername = formatUsername(pin.getUserName());
         formatScore(score, pinScore);
+        formatChildView(groupPosition, convertView);
 
         username.setText(pinUsername + ": ");
         message.setText("'" + pin.getMessage() + "'");
@@ -130,10 +131,26 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         String title = titleText.getText().toString();
 
         if(title.equalsIgnoreCase("Inbox")) {
-            titleText.setTextColor(Color.parseColor("#4da6ff"));
+            titleText.setBackgroundColor(Color.parseColor("#ccebff"));
         }
         else if(title.equalsIgnoreCase("Post History")) {
-            titleText.setTextColor(Color.parseColor("#e68a00"));
+            titleText.setBackgroundColor(Color.parseColor("#ffa366"));
+        }
+        else if(title.equalsIgnoreCase("Favorites")) {
+            titleText.setBackgroundColor(Color.parseColor("#ff8080"));
         }
     }
+
+    public void formatChildView(int group, View view) {
+        if(group == 0) {
+            view.setBackgroundColor(Color.parseColor("#e6f5ff"));
+        }
+        if(group == 1) {
+            view.setBackgroundColor(Color.parseColor("#ffe0cc"));
+        }
+        if(group ==2) {
+            view.setBackgroundColor(Color.parseColor("#ffb3b3"));
+        }
+    }
+
 }

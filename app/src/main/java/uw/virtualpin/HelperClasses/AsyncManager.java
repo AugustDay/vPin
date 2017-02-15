@@ -31,7 +31,7 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
     private final static String UPVOTE_PIN_CMD = "upvote";
     private final static String DOWNVOTE_PIN_CMD = "downvote";
     private final static String FAVORITE_PIN_CMD = "favorite_pin";
-    private final static String GET_USER_FAVORITES_CMD = "favorite_pins";
+    private final static String GET_USER_FAVORITES_CMD = "get_favorite_pins";
     private Snackbar snackbar;
     private View view;
     private String image;

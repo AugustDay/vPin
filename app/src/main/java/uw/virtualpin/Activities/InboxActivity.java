@@ -37,9 +37,11 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
     private ExpandableListView expandableListView;
     private ArrayList<Pin> inboxPins;
     private ArrayList<Pin> postHistoryPins;
+    private ArrayList<Pin> favoritePins;
     private AsyncManager asyncManager;
     private FilterManager filterManagerInbox;
     private FilterManager filterManagerPostHistory;
+    private FilterManager filterManagerFavorites;
     private LocationManager locationManager;
     private Snackbar snackbar;
     private EditText searchBar;
@@ -54,6 +56,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         headersPinMap = new HashMap<>();
         inboxPins = new ArrayList<>();
         postHistoryPins = new ArrayList<>();
+        favoritePins = new ArrayList<>();
         currentHeader = "inbox";
         isFirstTimeSetup = true;
     }
@@ -69,6 +72,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         searchBar = (EditText) findViewById(R.id.inboxSearchBarEditText);
         filterManagerInbox = new FilterManager(inboxPins);
         filterManagerPostHistory = new FilterManager(postHistoryPins);
+        filterManagerFavorites = new FilterManager(favoritePins);
         snackbar = Snackbar.make(findViewById(android.R.id.content), "Getting your location.", Snackbar.LENGTH_INDEFINITE);
         snackbar.show();
 
@@ -92,6 +96,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
                 clearAllViewData();
                 inboxPins = (ArrayList) filterManagerInbox.filter(s.toString());
                 postHistoryPins = (ArrayList) filterManagerPostHistory.filter(s.toString());
+                favoritePins = (ArrayList) filterManagerFavorites.filter(s.toString());
                 setupExpandableListView(expandableListView);
             }
 
@@ -152,6 +157,10 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
                     if(currentHeader.equalsIgnoreCase("post history")) {
                         postHistoryPins.add(pin);
                     }
+
+                    if(currentHeader.equalsIgnoreCase("favorites")) {
+                        favoritePins.add(pin);
+                    }
                 }
             } catch (JSONException e) {
                 Log.e("JSON", "Error parsing JSON string." + jsonString);
@@ -160,10 +169,14 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
             if(currentHeader.equalsIgnoreCase("inbox")) {
                 currentHeader = "post history";
                 asyncManager.pinHistory(user.username);
-                Log.e("USERNAME", user.username);
             }
 
             else if(currentHeader.equalsIgnoreCase("post history")) {
+                currentHeader = "favorites";
+                asyncManager.getUserFavoritePins(user.username);
+            }
+
+            else if(currentHeader.equalsIgnoreCase("favorites")) {
                 currentHeader = "";
                 setupExpandableListView(expandableListView);
             }
@@ -194,6 +207,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
     private void setupAllViewData() {
         setupInboxViewData();
         setupPostHistoryViewData();
+        setupFavoritesViewData();
     }
 
     private void setupInboxViewData() {
@@ -204,6 +218,11 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
     private void setupPostHistoryViewData() {
         headers.add("Post History");
         headersPinMap.put(headers.get(1), postHistoryPins);
+    }
+
+    private void setupFavoritesViewData() {
+        headers.add("Favorites");
+        headersPinMap.put(headers.get(2), favoritePins);
     }
 
     private void persistViewExpansion(int numToExpand) {
@@ -225,6 +244,10 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         }
 
         if(expandableListView.isGroupExpanded(1)) {
+            count++;
+        }
+
+        if(expandableListView.isGroupExpanded(2)) {
             count++;
         }
 
