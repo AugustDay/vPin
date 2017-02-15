@@ -1,6 +1,5 @@
 package uw.virtualpin.Activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import uw.virtualpin.Data.CurrentPin;
+import uw.virtualpin.Data.CurrentUser;
 import uw.virtualpin.HelperClasses.AsyncManager;
 import uw.virtualpin.HelperClasses.ImageManager;
 import uw.virtualpin.Interfaces.OnCompletionListener;
@@ -32,6 +32,7 @@ public class ViewPinActivity extends AppCompatActivity implements OnCompletionLi
     private ImageView upvote;
     private ImageView downvote;
     private ImageView favorite;
+    private CurrentUser currentUser;
 
     public ViewPinActivity() {
         encodedImage = "NO_IMAGE";
@@ -53,6 +54,7 @@ public class ViewPinActivity extends AppCompatActivity implements OnCompletionLi
         upvote = (ImageView) findViewById(R.id.upvoteView);
         downvote = (ImageView) findViewById(R.id.downvoteView);
         favorite = (ImageView) findViewById(R.id.favoriteView);
+        currentUser = new CurrentUser();
 
         asyncManager.getPin(currentPin.id);
         setupDownvote();
@@ -110,7 +112,7 @@ public class ViewPinActivity extends AppCompatActivity implements OnCompletionLi
             @Override
             public void onClick(View v) {
                 playPressedAnim(favorite);
-                //waiting for favorite implementation to database
+                asyncManager.favoritePin(currentUser.username, currentPin.id);
             }
         });
     }

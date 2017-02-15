@@ -23,7 +23,6 @@ public class ListViewAdapter extends ArrayAdapter<Pin> {
     private final ArrayList<Pin> pins;
 
     public ListViewAdapter(Context context, ArrayList<Pin> pins) {
-
         super(context, R.layout.listview_row, pins);
 
         this.context = context;

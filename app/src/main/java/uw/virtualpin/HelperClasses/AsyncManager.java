@@ -27,9 +27,11 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
     private final static String ALL_PINS_CMD = "select*users";
     private final static String GET_PIN_CMD = "get_pin";
     private final static String UPDATE_PIN_CMD = "update_pin";
-    private final static String NEARBY_PINS = "nearby_pins";
-    private final static String UPVOTE_PIN = "upvote";
-    private final static String DOWNVOTE_PIN = "downvote";
+    private final static String NEARBY_PINS_CMD = "nearby_pins";
+    private final static String UPVOTE_PIN_CMD = "upvote";
+    private final static String DOWNVOTE_PIN_CMD = "downvote";
+    private final static String FAVORITE_PIN_CMD = "favorite_pin";
+    private final static String GET_USER_FAVORITES_CMD = "favorite_pins";
     private Snackbar snackbar;
     private View view;
     private String image;
@@ -101,18 +103,30 @@ public class AsyncManager extends AsyncTask<String, Integer, String> {
     public void nearbyPins(String latitude, String longitude) {
         String extension = "&latitude=" + latitude
                 + "&longitude=" + longitude;
-        execute(URL + NEARBY_PINS + extension);
+        execute(URL + NEARBY_PINS_CMD + extension);
     }
 
     public void upvotePin(String pinId) {
         String extension = "&pinID=" + pinId;
-        execute(URL + UPVOTE_PIN + extension);
+        execute(URL + UPVOTE_PIN_CMD + extension);
     }
 
     public void downvotePin(String pinId) {
         String extension = "&pinID=" + pinId;
-        execute(URL + DOWNVOTE_PIN + extension);
+        execute(URL + DOWNVOTE_PIN_CMD + extension);
     }
+
+    public void favoritePin(String username, String pinId) {
+        String extension = "&username=" + username
+                + "&pinID=" + pinId;
+        execute(URL + FAVORITE_PIN_CMD + extension);
+    }
+
+    public void getUserFavoritePins(String username) {
+        String extension = "&username=" + username;
+        execute(URL + GET_USER_FAVORITES_CMD + extension);
+    }
+
 
     public void customAsyncRequest(String customUrl) {
         execute(customUrl);
