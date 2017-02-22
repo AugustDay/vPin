@@ -38,7 +38,7 @@
         </activity>
         <activity
             android:name=".Activities.InboxActivity"
-            android:label="Inbox"
+            android:label="Pins"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -82,7 +82,7 @@
         </activity>
         <activity
             android:name=".Activities.DropPinActivity"
-            android:label="Pin"
+            android:label="Create Pin"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -129,6 +129,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD8Bp-cZUFwn4-MhgQ6cvkKs6hAMaCdtds" />
+
     </application>
 
 </manifest>

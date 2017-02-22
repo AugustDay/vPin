@@ -3,12 +3,14 @@ package uw.virtualpin.Activities;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 
@@ -50,6 +52,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
     private String currentHeader;
     private CurrentUser user;
     private boolean isFirstTimeSetup;
+    private FloatingActionButton dropPinFab;
 
     public InboxActivity() {
         headers = new ArrayList<>();
@@ -64,6 +67,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_inbox);
 
         user = new CurrentUser();
@@ -73,9 +77,11 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         filterManagerInbox = new FilterManager(inboxPins);
         filterManagerPostHistory = new FilterManager(postHistoryPins);
         filterManagerFavorites = new FilterManager(favoritePins);
+        dropPinFab = (FloatingActionButton) findViewById(R.id.dropPinFAB);
         snackbar = Snackbar.make(findViewById(android.R.id.content), "Getting your location.", Snackbar.LENGTH_INDEFINITE);
         snackbar.show();
 
+        setupDropPinFab();
         setupSearchBar();
     }
 
@@ -132,6 +138,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         });
     }
 
+    //needs work to condense
     private void parseJSON(String jsonString) {
 
             try {
@@ -252,5 +259,16 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         }
 
         return count;
+    }
+
+    private void setupDropPinFab() {
+        dropPinFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("", "MADE IT");
+                Intent intent = new Intent(getApplicationContext(), DropPinActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
