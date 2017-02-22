@@ -2,13 +2,18 @@ package uw.virtualpin.Activities;
 
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -53,6 +58,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
     private CurrentUser user;
     private boolean isFirstTimeSetup;
     private FloatingActionButton dropPinFab;
+    private View searchBarView;
 
     public InboxActivity() {
         headers = new ArrayList<>();
@@ -71,6 +77,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         setContentView(R.layout.activity_inbox);
 
         user = new CurrentUser();
+        searchBarView = findViewById(R.id.inboxSearchBar);
         expandableListView = (ExpandableListView)findViewById(R.id.inboxList);
         locationManager = new LocationManager(this, this);
         searchBar = (EditText) findViewById(R.id.inboxSearchBarEditText);
@@ -80,6 +87,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         dropPinFab = (FloatingActionButton) findViewById(R.id.dropPinFAB);
         snackbar = Snackbar.make(findViewById(android.R.id.content), "Getting your location.", Snackbar.LENGTH_INDEFINITE);
         snackbar.show();
+        searchBarView.setVisibility(View.GONE);
 
         setupDropPinFab();
         setupSearchBar();
@@ -89,6 +97,39 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
     public void onPause() {
         super.onPause();
         snackbar.dismiss();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String itemTitle = item.getTitle().toString();
+
+        if(itemTitle.equalsIgnoreCase("Logout")) {
+            Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+            finishAffinity();
+            startActivity(logoutIntent);
+        }
+        else if(itemTitle.equalsIgnoreCase("Profile")) {
+            Intent profileIntent = new Intent(getApplicationContext(), ProfilePage.class);
+            startActivity(profileIntent);
+        }
+
+        else if(itemTitle.equalsIgnoreCase("Search")) {
+            if(searchBarView.getVisibility() == View.VISIBLE) {
+                searchBarView.setVisibility(View.GONE);
+            } else {
+                searchBarView.setVisibility(View.VISIBLE);
+            }
+        }
+
+        return true;
     }
 
     private void setupSearchBar() {
