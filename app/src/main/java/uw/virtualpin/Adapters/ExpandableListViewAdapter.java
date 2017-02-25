@@ -133,7 +133,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         if(title.equalsIgnoreCase("Inbox")) {
             titleText.setBackgroundColor(Color.parseColor("#ccebff"));
         }
-        else if(title.equalsIgnoreCase("Post History")) {
+        else if(title.equalsIgnoreCase("Pin History")) {
             titleText.setBackgroundColor(Color.parseColor("#ffa366"));
         }
         else if(title.equalsIgnoreCase("Favorites")) {

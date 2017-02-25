@@ -1,7 +1,13 @@
 package uw.virtualpin.Activities;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -69,6 +75,38 @@ public class ViewPinActivity extends AppCompatActivity implements OnCompletionLi
         locationText.setText(currentPin.coordinates);
         messageText.setText("'" + currentPin.message + "'");
         image.setImageBitmap(imageManager.convertEncodedImageToBitmap(currentPin.encodedImage));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        MenuItem item = menu.findItem(R.id.searchAction);
+        item.setIcon(getResources().getDrawable(R.drawable.left));
+        return true;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String itemTitle = item.getTitle().toString();
+
+        if(itemTitle.equalsIgnoreCase("Logout")) {
+            Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+            finishAffinity();
+            startActivity(logoutIntent);
+        }
+        else if(itemTitle.equalsIgnoreCase("Profile")) {
+            Intent profileIntent = new Intent(getApplicationContext(), ProfilePage.class);
+            startActivity(profileIntent);
+        }
+
+        else if(itemTitle.equalsIgnoreCase("Search")) {
+            Intent inboxIntent = new Intent(getApplicationContext(), InboxActivity.class);
+            startActivity(inboxIntent);
+        }
+
+        return true;
     }
 
     private void parseJson(String jsonString) {

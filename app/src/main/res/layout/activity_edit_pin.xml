@@ -6,12 +6,6 @@
     android:id="@+id/test2"
     tools:context="uw.virtualpin.Activities.EditPinActivity">
 
-    <fragment
-        android:name="uw.virtualpin.Fragments.NavigationFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </fragment>
-
     <TextView
         android:textSize="14dp"
         android:paddingBottom="10dp"

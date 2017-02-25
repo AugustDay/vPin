@@ -171,8 +171,13 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
                 currentPin.coordinates = "(" + pin.getLatitude() + ", " + pin.getLongitude() + ")";
                 currentPin.message = pin.getMessage();
 
-                Intent intent = new Intent(getApplicationContext(), ViewPinActivity.class);
-                startActivity(intent);
+                if(!headers.get(groupPosition).equalsIgnoreCase("Pin History")) {
+                    Intent intent = new Intent(getApplicationContext(), ViewPinActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), EditPinActivity.class);
+                    startActivity(intent);
+                }
 
                 return false;
             }
@@ -264,7 +269,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
     }
 
     private void setupPostHistoryViewData() {
-        headers.add("Post History");
+        headers.add("Pin History");
         headersPinMap.put(headers.get(1), postHistoryPins);
     }
 

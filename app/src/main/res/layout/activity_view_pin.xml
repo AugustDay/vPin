@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_view_pin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="5dp"
     tools:context="uw.virtualpin.Activities.ViewPinActivity">
-
-    <fragment
-        android:name="uw.virtualpin.Fragments.NavigationFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </fragment>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:id="@+id/pinViewTextLayout"
+        android:paddingLeft="5dp">
 
         <TextView
             android:textSize="22dp"
@@ -51,54 +46,81 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Date Unknown"
-        android:id="@+id/dateTextView"/>
+        android:id="@+id/dateTextView"
+        android:layout_below="@+id/pinViewTextLayout"
+        android:paddingLeft="5dp"/>
 
     <TextView
         android:textSize="14dp"
         android:textStyle=""
         android:textColor="#000000"
+        android:layout_below="@+id/dateTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
         android:text=""
         android:id="@+id/messageTextView" />
 
     <ImageView
         android:id="@+id/imageViewView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/messageTextView"
+        android:padding="10dp"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_marginTop="80dp"
-        android:gravity="bottom|center">
+        android:elevation="4dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:padding="20dp"
+            android:elevation="4dp"
+            android:background="#f2f2f2"/>
 
         <ImageView
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_margin="15dp"
+            android:layout_marginBottom="19dp"
+            android:layout_marginLeft="16dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
             android:scaleType="centerCrop"
+            android:elevation="4dp"
+            android:src="@drawable/thumbs_down_icon"
+            android:id="@+id/downvoteView" />
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="centerCrop"
+            android:elevation="4dp"
+            android:layout_marginBottom="24dp"
+            android:layout_toLeftOf="@id/downvoteView"
+            android:layout_alignParentBottom="true"
             android:src="@drawable/thumbs_up_icon"
             android:id="@+id/upvoteView"/>
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/thumbs_down_icon"
-            android:id="@+id/downvoteView"/>
-
-        <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_margin="15dp"
+            android:elevation="4dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="16dp"
             android:scaleType="centerCrop"
+            android:layout_alignParentBottom="true"
             android:src="@drawable/heart_favorite_icon"
-            android:id="@+id/favoriteView"/>
-    </LinearLayout>
+            android:id="@+id/favoriteView"
+            android:layout_toRightOf="@id/downvoteView"/>
+    </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

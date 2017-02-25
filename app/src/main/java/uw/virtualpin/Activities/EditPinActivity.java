@@ -5,11 +5,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -83,6 +88,38 @@ public class EditPinActivity extends AppCompatActivity implements OnCompletionLi
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        MenuItem item = menu.findItem(R.id.searchAction);
+        item.setIcon(getResources().getDrawable(R.drawable.left));
+        return true;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        String itemTitle = item.getTitle().toString();
+
+        if(itemTitle.equalsIgnoreCase("Logout")) {
+            Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+            finishAffinity();
+            startActivity(logoutIntent);
+        }
+        else if(itemTitle.equalsIgnoreCase("Profile")) {
+            Intent profileIntent = new Intent(getApplicationContext(), ProfilePage.class);
+            startActivity(profileIntent);
+        }
+
+        else if(itemTitle.equalsIgnoreCase("Search")) {
+            Intent inboxIntent = new Intent(getApplicationContext(), InboxActivity.class);
+            startActivity(inboxIntent);
+        }
+
+        return true;
+    }
+
+    @Override
     public void onActivityResult(final int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK && requestCode == PICK_IMAGE) {
@@ -102,8 +139,8 @@ public class EditPinActivity extends AppCompatActivity implements OnCompletionLi
     }
 
     private void setupPinDetails() {
-        creatorText.setText(currentPin.userName);
-        locationText.setText(currentPin.coordinates);
+        creatorText.setText("Creator: " + currentPin.userName);
+        locationText.setText("Location: " + currentPin.coordinates);
         messageText.setText(currentPin.message);
         imageView.setImageBitmap(imageManager.convertEncodedImageToBitmap(currentPin.encodedImage));
     }
