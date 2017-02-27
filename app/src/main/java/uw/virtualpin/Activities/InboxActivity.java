@@ -163,13 +163,9 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                //current pin is actually being used, ignore the message
                 Pin pin = headersPinMap.get(headers.get(groupPosition)).get(childPosition);
                 CurrentPin currentPin = new CurrentPin(pin);
-
-                currentPin.id = pin.getId();
-                currentPin.userName = pin.getUserName();
-                currentPin.coordinates = "(" + pin.getLatitude() + ", " + pin.getLongitude() + ")";
-                currentPin.message = pin.getMessage();
 
                 if(!headers.get(groupPosition).equalsIgnoreCase("Pin History")) {
                     Intent intent = new Intent(getApplicationContext(), ViewPinActivity.class);
@@ -202,6 +198,7 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
                             ,Integer.parseInt(jsonObject.getString("views")));
 
                     pin.setId(jsonObject.getString("pinID"));
+                    pin.setDateTime(jsonObject.getString("date_posted"));
 
                     if(currentHeader.equalsIgnoreCase("inbox")) {
                         inboxPins.add(pin);

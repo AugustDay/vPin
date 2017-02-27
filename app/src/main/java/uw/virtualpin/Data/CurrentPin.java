@@ -12,6 +12,7 @@ public class CurrentPin {
     public static double longitude;
     public static String encodedImage;
     public static String coordinates;
+    public static String dateTime;
 
     public CurrentPin() {
     }
@@ -24,5 +25,6 @@ public class CurrentPin {
         this.longitude = pin.getLongitude();
         this.encodedImage = pin.getEncodedImage();
         this.coordinates = "(" + latitude + ", " + longitude + ")";
+        this.dateTime = pin.getDateTime();
     }
 }

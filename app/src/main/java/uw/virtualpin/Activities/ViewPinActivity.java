@@ -75,6 +75,7 @@ public class ViewPinActivity extends AppCompatActivity implements OnCompletionLi
         locationText.setText(currentPin.coordinates);
         messageText.setText("'" + currentPin.message + "'");
         image.setImageBitmap(imageManager.convertEncodedImageToBitmap(currentPin.encodedImage));
+        createdDateText.setText(currentPin.dateTime);
     }
 
     @Override

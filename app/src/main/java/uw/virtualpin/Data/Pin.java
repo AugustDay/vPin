@@ -1,5 +1,15 @@
 package uw.virtualpin.Data;
 
+import android.annotation.TargetApi;
+import android.icu.text.DateFormat;
+import android.icu.text.RelativeDateTimeFormatter;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
+import android.util.Log;
+
+import java.text.ParseException;
+import java.util.Date;
+
 /**
  * Created by Tyler on 11/19/2016.
  */
@@ -16,6 +26,7 @@ public class Pin {
     private int downvotes;
     private int views;
     private int score;
+    private String dateTime;
 
     public Pin(String userName, double latitude, double longitude, String message, String encodedImage) {
         this.message = message;
@@ -41,6 +52,22 @@ public class Pin {
             viewScore = views/5;
         }
         return viewScore + upvotes + (-1*downvotes);
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    public void setDateTime(String dateTime) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = format.parse(dateTime);
+            format = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+            this.dateTime = format.format(date);
+        } catch (ParseException e) {
+            this.dateTime = dateTime;
+        }
     }
 
     public int getUpvotes() {
