@@ -27,9 +27,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.LoginActivity"
-            android:label="vPin"
+            android:label=""
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

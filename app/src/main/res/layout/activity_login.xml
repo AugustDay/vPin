@@ -1,56 +1,112 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="uw.virtualpin.Activities.LoginActivity" >
+    tools:context="uw.virtualpin.Activities.LoginActivity"
+    android:background="#808080"
+    android:focusableInTouchMode="true">
 
-    <EditText
+    <ImageView
+        android:layout_width="230dp"
+        android:layout_height="230dp"
+        android:layout_marginTop="-40dp"
+        android:layout_centerHorizontal="true"
+        android:elevation="5dp"
+        android:src="@drawable/vpin_logo2" />
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText_username"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:hint="Username:" />
+        android:layout_height="300dp"
+        android:background="#cc3300"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:alpha="0.8">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/editText_password"
-        android:hint="Password:" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:elevation="8dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="#000000"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Log In"
-        android:id="@+id/button_login"
-        android:padding="10dp"
-        android:backgroundTint="#00ff00"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/editText_username"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:elevation="6dp"
+            android:textColor="#ffffff"
+            android:background="@drawable/rounded_corner"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:hint="Username:" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Don&apos;t have an account? Click to register"
-        android:id="@+id/textView" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:elevation="8dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="#000000"/>
 
-    <Button
-        android:padding="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go to Register"
-        android:id="@+id/button_goToRegister"
-        android:layout_below="@+id/textView"
-        android:layout_alignRight="@+id/button_login"
-        android:layout_alignEnd="@+id/button_login"
-        android:backgroundTint="#3366ff"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:elevation="6dp"
+            android:textColor="#ffffff"
+            android:background="@drawable/rounded_corner"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:id="@+id/editText_password"
+            android:hint="Password:" />
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="#000000"/>
 
-</LinearLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Log In"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:id="@+id/button_login"
+            android:padding="10dp"
+            android:backgroundTint="#800000"
+            android:textColor="#ffffff" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Don&apos;t have an account?"
+            android:id="@+id/textView" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Click to register"
+            android:textColor="#800000"
+            android:layout_gravity="center"
+            android:id="@+id/button_goToRegister"
+            android:layout_below="@+id/textView"
+            android:layout_alignRight="@+id/button_login"
+            android:layout_alignEnd="@+id/button_login"
+            android:backgroundTint="#cc3300"/>
+
+    </LinearLayout>
+</RelativeLayout>
