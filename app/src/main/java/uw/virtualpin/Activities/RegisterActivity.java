@@ -29,7 +29,7 @@ import uw.virtualpin.R;
 public class RegisterActivity extends AppCompatActivity {
 
     public final static String COURSE_ADD_URL
-            = "http://cssgate.insttech.washington.edu/~_450team8/info.php?cmd=register_user";
+            = "http://cssgate.insttech.washington.edu/~adi1996/info.php?cmd=register_user";
     public EditText editText_username;
     public EditText editText_password;
     public EditText editText_email;
