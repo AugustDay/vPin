@@ -55,6 +55,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingRight="10dp"
+        android:background="#ffffff"
         android:id="@+id/inboxSearchBar"
         android:layout_below="@id/pinsMenuSelector">
 
