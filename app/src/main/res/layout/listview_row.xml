@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:background="#ffffff"
     android:id="@+id/rowLayout"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:elevation="4dp">
 
     <TextView
         android:textStyle="bold"
@@ -31,6 +32,7 @@
         android:textSize="15dp"
         android:layout_gravity="right"
         android:layout_alignParentRight="true"
-        android:id="@+id/listview_score"/>
+        android:id="@+id/listview_score"
+        android:elevation="4dp"/>
 
 </RelativeLayout>

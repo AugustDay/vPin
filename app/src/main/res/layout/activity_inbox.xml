@@ -12,12 +12,53 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="uw.virtualpin.Activities.InboxActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:id="@+id/inboxSearchBar">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:elevation="8dp"
+            android:background="#000000"/>
+
+        <ImageView
+            android:src="@android:drawable/ic_search_category_default"
+            android:paddingTop="8dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/searchIcon"/>
+
+        <EditText
+            android:textSize="20dp"
+            android:hint="Search:"
+            android:background="#ffffff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/inboxSearchBarEditText"
+            android:layout_toRightOf="@id/searchIcon"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:elevation="8dp"
+            android:layout_below="@id/inboxSearchBarEditText"
+            android:layout_marginTop="6dp"
+            android:background="#000000"/>
+
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="#808080"
         android:orientation="horizontal"
-        android:id="@+id/pinsMenuSelector">
+        android:id="@+id/pinsMenuSelector"
+        android:layout_below="@id/inboxSearchBar">
 
         <TextView
             android:text="Inbox"
@@ -50,30 +91,6 @@
             android:id="@+id/favoritesTab"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingRight="10dp"
-        android:background="#ffffff"
-        android:id="@+id/inboxSearchBar"
-        android:layout_below="@id/pinsMenuSelector">
-
-        <ImageView
-            android:src="@android:drawable/ic_search_category_default"
-            android:paddingTop="8dp"
-            android:layout_width="35dp"
-            android:layout_height="35dp" />
-
-        <EditText
-            android:textSize="20dp"
-            android:hint="Search:"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/inboxSearchBarEditText"/>
-
-    </LinearLayout>
-
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -92,7 +109,7 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/inboxSearchBar"
+        android:layout_below="@+id/pinsMenuSelector"
         android:elevation="4dp"
         android:divider="#000000"
         android:dividerHeight="0.5dp"
