@@ -7,16 +7,56 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:focusable="true"
+    android:background="#808080"
     android:focusableInTouchMode="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="uw.virtualpin.Activities.InboxActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="#808080"
+        android:orientation="horizontal"
+        android:id="@+id/pinsMenuSelector">
+
+        <TextView
+            android:text="Inbox"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:background="#ffffff"
+            android:id="@+id/inboxTab"/>
+
+        <TextView
+            android:text="Pin History"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:background="#808080"
+            android:id="@+id/pinHistoryTab"/>
+
+        <TextView
+            android:text="Favorites"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp"
+            android:background="#808080"
+            android:id="@+id/favoritesTab"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingRight="10dp"
-        android:id="@+id/inboxSearchBar">
+        android:id="@+id/inboxSearchBar"
+        android:layout_below="@id/pinsMenuSelector">
 
         <ImageView
             android:src="@android:drawable/ic_search_category_default"
@@ -48,13 +88,13 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp" />
 
-    <ExpandableListView
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/inboxSearchBar"
         android:elevation="4dp"
         android:divider="#000000"
         android:dividerHeight="0.5dp"
-        android:id="@+id/inboxList"></ExpandableListView>
+        android:id="@+id/inboxList"></ListView>
 
 </RelativeLayout>

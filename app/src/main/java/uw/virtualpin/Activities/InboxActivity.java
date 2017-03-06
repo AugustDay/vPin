@@ -1,6 +1,7 @@
 package uw.virtualpin.Activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,20 +17,22 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.location.LocationListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import uw.virtualpin.Adapters.ExpandableListViewAdapter;
+import uw.virtualpin.Adapters.ListViewAdapter;
 import uw.virtualpin.Data.CurrentPin;
 import uw.virtualpin.Data.CurrentUser;
 import uw.virtualpin.Data.Pin;
@@ -41,7 +44,7 @@ import uw.virtualpin.R;
 
 public class InboxActivity extends AppCompatActivity implements OnCompletionListener, LocationListener{
 
-    private ExpandableListView expandableListView;
+    private ListView listView;
     private ArrayList<Pin> inboxPins;
     private ArrayList<Pin> postHistoryPins;
     private ArrayList<Pin> favoritePins;
@@ -52,22 +55,25 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
     private LocationManager locationManager;
     private Snackbar snackbar;
     private EditText searchBar;
-    private List<String> headers;
-    private HashMap<String, List<Pin>> headersPinMap;
     private String currentHeader;
     private CurrentUser user;
-    private boolean isFirstTimeSetup;
     private FloatingActionButton dropPinFab;
     private View searchBarView;
+    private boolean favoritesSelected;
+    private boolean inboxSelected;
+    private boolean pinHistorySelected;
+    private TextView inboxTab;
+    private TextView pinHistoryTab;
+    private TextView favoritesTab;
 
     public InboxActivity() {
-        headers = new ArrayList<>();
-        headersPinMap = new HashMap<>();
         inboxPins = new ArrayList<>();
         postHistoryPins = new ArrayList<>();
         favoritePins = new ArrayList<>();
         currentHeader = "inbox";
-        isFirstTimeSetup = true;
+        favoritesSelected = false;
+        inboxSelected = true;
+        pinHistorySelected = false;
     }
 
     @Override
@@ -78,17 +84,22 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
 
         user = new CurrentUser();
         searchBarView = findViewById(R.id.inboxSearchBar);
-        expandableListView = (ExpandableListView)findViewById(R.id.inboxList);
+        listView = (ListView)findViewById(R.id.inboxList);
         locationManager = new LocationManager(this, this);
         searchBar = (EditText) findViewById(R.id.inboxSearchBarEditText);
         filterManagerInbox = new FilterManager(inboxPins);
         filterManagerPostHistory = new FilterManager(postHistoryPins);
         filterManagerFavorites = new FilterManager(favoritePins);
         dropPinFab = (FloatingActionButton) findViewById(R.id.dropPinFAB);
+        inboxTab = (TextView) findViewById(R.id.inboxTab);
+        pinHistoryTab = (TextView) findViewById(R.id.pinHistoryTab);
+        favoritesTab = (TextView) findViewById(R.id.favoritesTab);
+
         snackbar = Snackbar.make(findViewById(android.R.id.content), "Getting your location.", Snackbar.LENGTH_INDEFINITE);
         snackbar.show();
         searchBarView.setVisibility(View.GONE);
 
+        setupPinTabSelector();
         setupDropPinFab();
         setupSearchBar();
     }
@@ -140,11 +151,10 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                clearAllViewData();
                 inboxPins = (ArrayList) filterManagerInbox.filter(s.toString());
                 postHistoryPins = (ArrayList) filterManagerPostHistory.filter(s.toString());
                 favoritePins = (ArrayList) filterManagerFavorites.filter(s.toString());
-                setupExpandableListView(expandableListView);
+                setupListView(listView);
             }
 
             @Override
@@ -153,29 +163,37 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
         });
     }
 
-    private void setupExpandableListView(ExpandableListView expandableListView) {
-        int numToExpand = getViewsToExpand();
-        setupAllViewData();
-        ExpandableListViewAdapter adapter = new ExpandableListViewAdapter(this, headers, headersPinMap);
-        expandableListView.setAdapter(adapter);
-        persistViewExpansion(numToExpand);
+    private void setupListView(ListView listView) {
+        ListViewAdapter adapter = new ListViewAdapter(getApplicationContext(), getSelectedPinList()
+        , getSelectedTab());
+        listView.setAdapter(adapter);
 
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                //current pin is actually being used, ignore the message
-                Pin pin = headersPinMap.get(headers.get(groupPosition)).get(childPosition);
-                CurrentPin currentPin = new CurrentPin(pin);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if(!headers.get(groupPosition).equalsIgnoreCase("Pin History")) {
+                Pin pin;
+
+                if(inboxSelected) {
+                    pin = inboxPins.get(position);
+                    CurrentPin currentPin = new CurrentPin(pin);
                     Intent intent = new Intent(getApplicationContext(), ViewPinActivity.class);
                     startActivity(intent);
-                } else {
+                }
+
+                else if(pinHistorySelected) {
+                    pin = postHistoryPins.get(position);
+                    CurrentPin currentPin = new CurrentPin(pin);
                     Intent intent = new Intent(getApplicationContext(), EditPinActivity.class);
                     startActivity(intent);
                 }
 
-                return false;
+                else {
+                    pin = favoritePins.get(position);
+                    CurrentPin currentPin = new CurrentPin(pin);
+                    Intent intent = new Intent(getApplicationContext(), ViewPinActivity.class);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -228,13 +246,14 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
 
             else if(currentHeader.equalsIgnoreCase("favorites")) {
                 currentHeader = "";
-                setupExpandableListView(expandableListView);
+                setupListView(listView);
             }
         }
 
     @Override
     public void onComplete(String result) {
         asyncManager = asyncManager.resetAsyncManager();
+        asyncManager.showMessages(false);
         parseJSON(result);
     }
 
@@ -245,63 +264,9 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
 
         asyncManager = new AsyncManager(findViewById(android.R.id.content), this);
         asyncManager.nearbyPins(latitude, longitude);
+        asyncManager.showMessages(false);
         locationManager.stopLocationManager();
         snackbar.dismiss();
-    }
-
-    private void clearAllViewData() {
-        headers = new ArrayList<>();
-        headersPinMap = new HashMap<>();
-    }
-
-    private void setupAllViewData() {
-        setupInboxViewData();
-        setupPostHistoryViewData();
-        setupFavoritesViewData();
-    }
-
-    private void setupInboxViewData() {
-        headers.add("Inbox");
-        headersPinMap.put(headers.get(0), inboxPins);
-    }
-
-    private void setupPostHistoryViewData() {
-        headers.add("Pin History");
-        headersPinMap.put(headers.get(1), postHistoryPins);
-    }
-
-    private void setupFavoritesViewData() {
-        headers.add("Favorites");
-        headersPinMap.put(headers.get(2), favoritePins);
-    }
-
-    private void persistViewExpansion(int numToExpand) {
-        for(int i = 0; i < numToExpand; i++) {
-            expandableListView.expandGroup(i);
-        }
-    }
-
-    private int getViewsToExpand() {
-        if(isFirstTimeSetup) {
-            isFirstTimeSetup = false;
-            return 1;
-        }
-
-        int count = 0;
-
-        if(expandableListView.isGroupExpanded(0)) {
-            count++;
-        }
-
-        if(expandableListView.isGroupExpanded(1)) {
-            count++;
-        }
-
-        if(expandableListView.isGroupExpanded(2)) {
-            count++;
-        }
-
-        return count;
     }
 
     private void setupDropPinFab() {
@@ -314,4 +279,75 @@ public class InboxActivity extends AppCompatActivity implements OnCompletionList
             }
         });
     }
+
+    private void setupPinTabSelector() {
+        inboxTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAllTabsSelected();
+                inboxTab.setBackgroundColor(Color.parseColor("#ffffff"));
+                inboxSelected = true;
+                setupListView(listView);
+            }
+        });
+
+        favoritesTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAllTabsSelected();
+                favoritesTab.setBackgroundColor(Color.parseColor("#ffffff"));
+                favoritesSelected = true;
+                setupListView(listView);
+            }
+        });
+
+        pinHistoryTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAllTabsSelected();
+                pinHistoryTab.setBackgroundColor(Color.parseColor("#ffffff"));
+                pinHistorySelected = true;
+                setupListView(listView);
+            }
+        });
+    }
+
+    private void clearAllTabsSelected() {
+        pinHistorySelected = false;
+        inboxSelected = false;
+        favoritesSelected = false;
+
+        pinHistoryTab.setBackgroundColor(Color.parseColor("#808080"));
+        inboxTab.setBackgroundColor(Color.parseColor("#808080"));
+        favoritesTab.setBackgroundColor(Color.parseColor("#808080"));
+    }
+
+    private ArrayList<Pin> getSelectedPinList() {
+        if(inboxSelected) {
+            return inboxPins;
+        }
+
+        else if(pinHistorySelected) {
+            return postHistoryPins;
+        }
+
+        else {
+            return favoritePins;
+        }
+    }
+
+    private String getSelectedTab() {
+        if(inboxSelected) {
+            return "inbox";
+        }
+
+        else if(pinHistorySelected) {
+            return "pin history";
+        }
+
+        else {
+            return "favorites";
+        }
+    }
+
 }

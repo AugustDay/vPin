@@ -21,12 +21,14 @@ public class ListViewAdapter extends ArrayAdapter<Pin> {
 
     private final Context context;
     private final ArrayList<Pin> pins;
+    private final String tab;
 
-    public ListViewAdapter(Context context, ArrayList<Pin> pins) {
+    public ListViewAdapter(Context context, ArrayList<Pin> pins, String tab) {
         super(context, R.layout.listview_row, pins);
 
         this.context = context;
         this.pins = pins;
+        this.tab = tab;
     }
 
     @Override
@@ -36,6 +38,7 @@ public class ListViewAdapter extends ArrayAdapter<Pin> {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View rowView = inflater.inflate(R.layout.listview_row, parent, false);
+        //formatRowViewColor(rowView);
 
         TextView username = (TextView) rowView.findViewById(R.id.listview_username);
         TextView message = (TextView) rowView.findViewById(R.id.listview_message);
@@ -64,5 +67,17 @@ public class ListViewAdapter extends ArrayAdapter<Pin> {
     public String formatUsername(String username) {
         username = username.substring(0,1).toUpperCase() + username.substring(1);
         return username;
+    }
+
+    public void formatRowViewColor(View view) {
+        if(tab.equalsIgnoreCase("inbox")) {
+            view.setBackgroundColor(Color.parseColor("#e6f5ff"));
+        }
+        else if(tab.equalsIgnoreCase("pin history")) {
+            view.setBackgroundColor(Color.parseColor("#ffe0cc"));
+        }
+        else {
+            view.setBackgroundColor(Color.parseColor("#ffb3b3"));
+        }
     }
 }
